@@ -1,14 +1,16 @@
 {
-
-  "type": "module",
-  "name": "server",
-"scripts": {
-  "dev": "ts-node-dev --respawn --transpile-only app.ts",
-  "build": "tsc",
-  "start": "node dist/app.js"
-},
+  "name": "backend",
   "version": "1.0.0",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --no-deprecation --env-file=.env app.js",
+    "start": "node --no-deprecation app.js",
+    "setup": "node --env-file=.env database/setup.js",
+    "build": "npm install"
+  },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "cron": "^4.4.0",
@@ -30,6 +32,7 @@
     "@types/express": "^5.0.6",
     "@types/express-session": "^1.18.2",
     "@types/multer": "^2.0.0",
-    "@types/node": "^25.0.9"
+    "@types/node": "^25.0.9",
+    "ts-node-dev": "^2.0.0"
   }
 }
