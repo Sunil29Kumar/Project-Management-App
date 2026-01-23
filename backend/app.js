@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 // auth routes
 app.use("/auth",authRouter);
 
-app.use("/projects",)
+// app.use("/projects",)
 
 
 app.use((err, req, res, next) => {

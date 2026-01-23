@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { loginAuth, registerAuth } from "../api/authApi.js";
+import { loginAuth, logoutAuth, registerAuth } from "../api/authApi.js";
 
 
 export const AuthContext = createContext(null)
@@ -14,10 +14,15 @@ const login = async (email, password) => {
   return data
 }
 
+const logout = async () => {
+  const data = await logoutAuth()
+  return data
+}
+
 export default function AuthProvider({ children }) {
   return <AuthContext.Provider
     value={{
-      register,login
+      register,login, logout
     }}>
     {children}
   </AuthContext.Provider>;

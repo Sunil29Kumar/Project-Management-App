@@ -3,7 +3,7 @@ import axios from "./axios";
 
 export const registerAuth = async (name, email, password) => {
     try {
-        const response = await axios.post('auth/register', { name, email, password })
+        const response = await axios.post('/auth/register', { name, email, password })
         return response.data
     }
     catch (error) {
@@ -13,9 +13,18 @@ export const registerAuth = async (name, email, password) => {
 
 export const loginAuth = async (email, password) => {
     try {
-        const response = await axios.post('auth/login', { email, password })
+        const response = await axios.post('/auth/login', { email, password })
         return response.data
 
+    } catch (error) {
+        return error?.response.data
+    }
+}
+
+export const logoutAuth = async ()=>{
+    try {
+        const response = await axios.post("/auth/logout")
+        return response.data
     } catch (error) {
         return error?.response.data
     }
