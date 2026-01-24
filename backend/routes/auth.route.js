@@ -1,13 +1,15 @@
 
 import e, { Router } from "express";
-import { login, logout ,register} from "../controllers/auth.controller.js";
+import { login, logout, register } from "../controllers/auth.controller.js";
 import checkAuth from "../middlewares/authMiddleware.js";
+import { loginValidations, registerValidations } from "../validators/authSchema.js";
+import { validate } from "../middlewares/validateInputs.js";
 
 const router = Router();
 
-router.post("/register", register)
+router.post("/register", validate(registerValidations), register)
 
-router.post("/login",login)
+router.post("/login", validate(loginValidations), login)
 
 router.post("/logout", checkAuth, logout)
 

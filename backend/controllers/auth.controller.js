@@ -1,31 +1,11 @@
-import z from "zod";
-import { loginSchema, registerSchema } from "../validators/userZodSchema.js"
 import User from "../models/user.model.js";
 import Session from "../models/session.model.js";
 
 
 export const register = async (req, res) => {
-    const { success, data, error } = registerSchema.safeParse(req.body);
-    if (!success) {
-        return res.status(400).json({
-            success: false,
-            error: "Invalid request data",
-            details: {
-                name: z.flattenError(error).fieldErrors.name,
-                email: z.flattenError(error).fieldErrors.email,
-                password: z.flattenError(error).fieldErrors.password,
-                otp: z.flattenError(error).fieldErrors.otp
-            }
-        });
-    }
-
 
     try {
-
-        const { name, email, password } = data;
-        if (!name || !email || !password) {
-            return res.status(400).json({success: false, error: "All fields are required" });
-        }
+        const { name, email, password } = req.body;
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -45,13 +25,9 @@ export const register = async (req, res) => {
 }
 
 export const login = async (req, res) => {
-    const { success, data, error } = loginSchema.safeParse(req.body);
-    if (!success) {
-        return res.status(400).json({success: false, error: "Invalid Credentials", });
-    }
 
     try {
-        const { email, password } = data;
+        const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({success: false, error: "User does not exist" });

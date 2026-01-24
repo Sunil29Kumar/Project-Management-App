@@ -1,37 +1,38 @@
+import mongoose, { Schema } from "mongoose";
 
-
-const projectSchema = new mongoose.Schema({
+const projectSchema = new Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
     name: {
         type: String,
-        required: true,
+        required: [true, "Project name is required"],
+        trim: true,
     },
     description: {
         type: String,
-        required: true,
+        trim: true,
     },
-    createdBy: {
+    owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User", // Jisne project banaya
         required: true,
     },
     members: [
         {
-            user: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
-                required: true,
-            },
-            role: {
-                type: String,
-                enum: ['admin', 'developer', 'qa'],
-                default: 'admin',
-            }
-
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User", // Team members jo is project par kaam karenge
         }
     ],
-
+    status: {
+        type: String,
+        enum: ["active", "completed", "archived"],
+        default: "active",
+    },
+    tags: [{ type: String }], // e.g. ["Frontend", "Urgent"]
 }, { timestamps: true });
 
-const Project = mongoose.model('Project', projectSchema);
-
+const Project = mongoose.model("Project", projectSchema);
 export default Project;

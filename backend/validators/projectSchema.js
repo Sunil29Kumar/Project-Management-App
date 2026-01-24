@@ -1,6 +1,15 @@
 import { z } from "zod";
+import DOMPurify from "dompurify";
+import { JSDOM } from "jsdom";
 
-export const projectSchema = z.object({
+// Setup DOMPurify with JSDOM
+const window = new JSDOM("").window;
+const purify = DOMPurify(window);
+
+// Helper function to sanitize strings
+const clean = (val) => purify.sanitize(val.trim());
+
+export const projectValidations = z.object({
     name: z
         .string({ required_error: "Project name is required" })
         .min(3, "Name must be at least 3 characters long")
@@ -23,4 +32,12 @@ export const projectSchema = z.object({
         .optional()
         .default([]),
 
+}).transform((data) => {
+    // Sanitize all string fields
+    return {
+        ...data,
+        name: clean(data.name),
+        description: data.description ? clean(data.description) : data.description,
+        tags: data.tags ? data.tags.map(tag => clean(tag)) : data.tags,
+    };
 });

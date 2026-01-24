@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 // auth routes
 app.use("/auth", authRouter);
 app.use("/user", userRouter)
-app.use("/projects",checkAuth, projectRouter)
+app.use("/projects", projectRouter)
 
 // app.use("/projects",)
 

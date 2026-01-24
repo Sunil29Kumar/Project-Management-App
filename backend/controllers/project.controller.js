@@ -1,24 +1,11 @@
-import { success } from "zod";
-import { projectSchema } from "../validators/projectZodSchema.js";
+import { projectValidations } from "../validators/projectSchema.js";
 import User from "../models/user.model.js";
-import Project from "../models/project.modle.js";
+import Project from "../models/project.model.js";
 
 export const createProject = async (req, res) => {
-    // 1. Zod Validation
-    const validation = projectSchema.safeParse(req.body);
-
-    if (!validation.success) {
-        return res.status(400).json({
-            success: false,
-            // Pehla validation error message frontend ke toast ke liye
-            message: validation.error.errors[0].message,
-            details: validation.error.flatten().fieldErrors
-        });
-    }
-
-    const { name, description, tags, status } = validation.data;
 
     try {
+        const { name, description, tags, status } = req.body;
         const userId = req.user._id;
 
         // 2. Extra Validation: Unique Name Check (Per User)
@@ -57,11 +44,87 @@ export const createProject = async (req, res) => {
 }
 
 export const getAllProjects = async (req, res) => {
-    // logic to get all projects
+    try {
+        const userId = req.user._id;
+
+        const projects = await Project.find({
+            $or: [
+                { owner: userId },
+                { members: userId } // Mongoose automatic array mein check kar leta hai
+            ]
+        })
+            .sort({ createdAt: -1 }) // Naye projects upar dikhayein
+            .populate("owner", "name email"); // Owner ki basic info bhi mil jayegi
+
+        return res.status(200).json({
+            success: true,
+            message: "Projects fetched successfully",
+            projects
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Server error while fetching projects"
+        });
+    }
 }
 
 
+export const updateProjectById = async (req, res) => {
+
+    try {
+        const { projectId } = req.params;
+        const updateData = req.body;
+        const userId = req.user._id;
+
+        // Check if project exists and user has permission
+        const updatedProject = await Project.findOneAndUpdate(
+            { _id: projectId, owner: userId },
+            { $set: updateData }, { new: true }
+        );
+        if (!updatedProject) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found or you do not have permission to update it"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Project updated successfully",
+            updatedProject
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Server error while updating project"
+        });
+    }
+
+}
+
+
+
 export const deleteProjectById = async (req, res) => {
-    // logic to delete a project
+    const { projectId } = req.params;
+    try {
+        const userId = req.user._id;
+        const project = await Project.findOneAndDelete({ _id: projectId, userId: userId });
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found or you do not have permission to delete it"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Project deleted successfully"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Server error while deleting project"
+        });
+    }
 }
 
