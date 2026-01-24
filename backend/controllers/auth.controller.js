@@ -1,6 +1,6 @@
 import z from "zod";
 import { loginSchema, registerSchema } from "../validators/userZodSchema.js"
-import User from "../models/auth.model.js";
+import User from "../models/user.model.js";
 import Session from "../models/session.model.js";
 
 
@@ -8,6 +8,7 @@ export const register = async (req, res) => {
     const { success, data, error } = registerSchema.safeParse(req.body);
     if (!success) {
         return res.status(400).json({
+            success: false,
             error: "Invalid request data",
             details: {
                 name: z.flattenError(error).fieldErrors.name,
@@ -23,22 +24,22 @@ export const register = async (req, res) => {
 
         const { name, email, password } = data;
         if (!name || !email || !password) {
-            return res.status(400).json({ error: "All fields are required" });
+            return res.status(400).json({success: false, error: "All fields are required" });
         }
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ error: "User already exists" });
+            return res.status(400).json({success: false, error: "User already exists" });
         }
 
         const newUser = new User({ name, email, password });
         await newUser.save();
 
-        return res.status(201).json({ message: "User registered successfully" });
+        return res.status(201).json({success: true, message: "User registered successfully" });
     } catch (error) {
 
         console.error("Error during registration:", error);
-        return res.status(500).json({ error: "Server error during registration" });
+        return res.status(500).json({success: false, error: "Server error during registration" });
     }
 
 }
@@ -46,19 +47,19 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     const { success, data, error } = loginSchema.safeParse(req.body);
     if (!success) {
-        return res.status(400).json({ error: "Invalid Credentials", });
+        return res.status(400).json({success: false, error: "Invalid Credentials", });
     }
 
     try {
         const { email, password } = data;
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ error: "User does not exist" });
+            return res.status(400).json({success: false, error: "User does not exist" });
         }
 
         const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
-            return res.status(400).json({ error: "Invalid password" });
+            return res.status(400).json({success: false, error: "Invalid password" });
         }
 
 
@@ -88,10 +89,10 @@ export const login = async (req, res) => {
             { loginWith: "email", $push: { lastLoginAt: new Date() } }
         );
 
-        return res.status(200).json({ message: "Login successful" });
+        return res.status(200).json({success: true, message: "Login successful" });
 
     } catch (error) {
-        return res.status(500).json({ error: "Server error during login" });
+        return res.status(500).json({success:false, error: "Server error during login" });
     }
 }
 
@@ -102,7 +103,7 @@ export const logout = async (req, res) => {
         const sessionId = req.signedCookies.sid;
 
         if (!userId || !sessionId) {
-            return res.status(400).json({ error: "No active session found" });
+            return res.status(400).json({success: false, error: "No active session found" });
         }
 
         // 1. Delete session from DB first
@@ -121,10 +122,10 @@ export const logout = async (req, res) => {
             $push: { lastLogoutAt: new Date() }
         });
 
-        return res.status(200).json({ message: "Logout successful" });
+        return res.status(200).json({success: true, message: "Logout successful" });
 
     } catch (error) {
         console.error("Logout Error:", error); // Terminal mein error check karne ke liye
-        return res.status(500).json({ error: "Server error during logout" });
+        return res.status(500).json({success: false, error: "Server error during logout" });
     }
 }

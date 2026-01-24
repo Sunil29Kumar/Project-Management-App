@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+
+
+
+/* Sonner Action Button Styling */
+.modern-toast [data-button] {
+  background: #3b82f6 !important; /* Blue color for action */
+  color: white !important;
+  border-radius: 6px !important;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.modern-toast [data-button]:hover {
+  background: #2563eb !important;
+  transform: scale(1.05);
+}
+
+/* Close button custom look */
+.modern-toast [data-close-button] {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #9ca3af;
+}
+
+.modern-toast [data-close-button]:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
