@@ -4,8 +4,7 @@ export const validate = (schema) => (req, res, next) => {
   if (!result.success) {
     return res.status(400).json({
       success: false,
-      message: "Validation Error",
-      errors: result.error.flatten().fieldErrors 
+      error: result.error.flatten().fieldErrors 
     });
   }
 

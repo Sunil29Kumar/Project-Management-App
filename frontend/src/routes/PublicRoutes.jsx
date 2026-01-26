@@ -1,8 +1,8 @@
 import { Children } from "react";
 import LoginForm from "../components/Forms/LoginForm";
 import RegisterForm from "../components/Forms/RegisterForm";
-import LendingPage from "../components/LendingPage";
-import PublicOnlyRoute from "../components/PublicOnlyRoute";
+import LendingPage from "../pages/Home/LendingPage";
+import PublicOnlyRoute from "../components/auth/PublicOnlyRoute";
 
 
 

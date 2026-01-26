@@ -31,7 +31,7 @@ export const logoutAuth = async () => {
 }
 
 
-export const isAuthinicated = async () => {
+export const isAuthenticated = async () => {
     try {
         const response = await axios.get("/user");
         return response.data

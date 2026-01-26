@@ -9,17 +9,17 @@ export const register = async (req, res) => {
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({success: false, error: "User already exists" });
+            return res.status(400).json({ success: false, error: "User already exists" });
         }
 
         const newUser = new User({ name, email, password });
         await newUser.save();
 
-        return res.status(201).json({success: true, message: "User registered successfully" });
+        return res.status(201).json({ success: true, message: "User registered successfully" });
     } catch (error) {
 
         console.error("Error during registration:", error);
-        return res.status(500).json({success: false, error: "Server error during registration" });
+        return res.status(500).json({ success: false, error: "Server error during registration" });
     }
 
 }
@@ -30,12 +30,12 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({success: false, error: "User does not exist" });
+            return res.status(400).json({ success: false, error: "User does not exist" });
         }
 
         const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
-            return res.status(400).json({success: false, error: "Invalid password" });
+            return res.status(400).json({ success: false, error: "Invalid password" });
         }
 
 
@@ -65,10 +65,10 @@ export const login = async (req, res) => {
             { loginWith: "email", $push: { lastLoginAt: new Date() } }
         );
 
-        return res.status(200).json({success: true, message: "Login successful" });
+        return res.status(200).json({ success: true, message: "Login successful" });
 
     } catch (error) {
-        return res.status(500).json({success:false, error: "Server error during login" });
+        return res.status(500).json({ success: false, error: "Server error during login" });
     }
 }
 
@@ -79,7 +79,7 @@ export const logout = async (req, res) => {
         const sessionId = req.signedCookies.sid;
 
         if (!userId || !sessionId) {
-            return res.status(400).json({success: false, error: "No active session found" });
+            return res.status(400).json({ success: false, error: "No active session found" });
         }
 
         // 1. Delete session from DB first
@@ -98,10 +98,10 @@ export const logout = async (req, res) => {
             $push: { lastLogoutAt: new Date() }
         });
 
-        return res.status(200).json({success: true, message: "Logout successful" });
+        return res.status(200).json({ success: true, message: "Logout successful" });
 
     } catch (error) {
         console.error("Logout Error:", error); // Terminal mein error check karne ke liye
-        return res.status(500).json({success: false, error: "Server error during logout" });
+        return res.status(500).json({ success: false, error: "Server error during logout" });
     }
 }

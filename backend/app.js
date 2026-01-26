@@ -34,8 +34,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRouter);
 app.use("/user", userRouter)
 app.use("/projects", projectRouter)
-
-// app.use("/projects",)
+// app.use("/tasks",)
 
 
 app.use((err, req, res, next) => {

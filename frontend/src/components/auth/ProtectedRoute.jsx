@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import AuthLoader from './AuthLoader';
-import Layout from './Layout';
+import Layout from '../../layout/Layout';
 import { Navigate, Outlet } from 'react-router-dom';
-import axiosInstance from '../api/axios';
+import axiosInstance from '../../api/axios';
 import { toast } from 'sonner';
-import { showToast } from '../utils/toast';
+import { showToast } from '../../utils/toast';
 
 function ProtectedRoute() {
     const { isAuth, setIsAuth, checkAuthentication } = useAuth();

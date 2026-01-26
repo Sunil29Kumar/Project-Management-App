@@ -1,15 +1,16 @@
 import { Children } from "react";
-import Dashboard from "../components/Dashboard";
-import ProtectedRoute from "../components/ProtectedRoute";
-import Projects from "../components/Projects";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+import Projects from "../pages/Projects/Projects";
 
 
 export const protectedRoutes = [
     {
+        path:"/",
         element: <ProtectedRoute />,
         children: [
-            { path:"/dashboard", element: <Dashboard /> },
-            { path: "/projects", element: <Projects /> }
+            { path:"dashboard", element: <Dashboard /> },
+            { path: "projects", element: <Projects /> }
         ]
     }
 

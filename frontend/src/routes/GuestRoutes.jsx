@@ -1,5 +1,5 @@
-import PrivacyPolicy from "../components/PrivacyPolicy";
-import TermsOfService from "../components/TermsOfService";
+import PrivacyPolicy from "../pages/Legal/PrivacyPolicy";
+import TermsOfService from "../pages/Legal/TermsOfService";
 
 
 export const guestRoutes = [

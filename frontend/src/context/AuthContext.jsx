@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { isAuthinicated, loginAuth, logoutAuth, registerAuth } from "../api/authApi.js";
+import { isAuthenticated, loginAuth, logoutAuth, registerAuth } from "../api/authApi.js";
 
 
 export const AuthContext = createContext()
@@ -11,9 +11,10 @@ export default function AuthProvider({ children }) {
   const [isAuth, setIsAuth] = useState();
   const [user, setUser] = useState({});
 
+
   const checkAuthentication = async () => {
     try {
-      const data = await isAuthinicated();
+      const data = await isAuthenticated();
       if (data?.success) {
         setIsAuth(true);
         setUser(data.user);
@@ -28,13 +29,14 @@ export default function AuthProvider({ children }) {
 
 
   const register = async (name, email, password) => {
-    const data = await registerAuth(name, email, password)
-    return data
-  }
+    const data = await registerAuth(name, email, password);
+    return data;
+  };
+
 
   const login = async (email, password) => {
     const data = await loginAuth(email, password)
-    setIsAuth(true);
+    if(data?.success) setIsAuth(true);
     return data
   }
 
@@ -47,7 +49,7 @@ export default function AuthProvider({ children }) {
 
   return <AuthContext.Provider
     value={{
-      register, login, logout, isAuth,setIsAuth, user, checkAuthentication
+      register, login, logout, isAuth, setIsAuth, user, checkAuthentication
     }}>
     {children}
   </AuthContext.Provider>;
