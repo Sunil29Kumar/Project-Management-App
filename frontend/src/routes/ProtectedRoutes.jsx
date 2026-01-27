@@ -2,6 +2,7 @@ import { Children } from "react";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import Projects from "../pages/Projects/Projects";
+import ProfileSettings from "../pages/ProfileSettings";
 
 
 export const protectedRoutes = [
@@ -10,7 +11,8 @@ export const protectedRoutes = [
         element: <ProtectedRoute />,
         children: [
             { path:"dashboard", element: <Dashboard /> },
-            { path: "projects", element: <Projects /> }
+            { path: "projects", element: <Projects /> },
+            { path: "settings", element: <ProfileSettings /> }
         ]
     }
 

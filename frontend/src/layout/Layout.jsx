@@ -1,24 +1,45 @@
-// Layout.jsx
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../components/common/Sidebar";
 import TopNav from "../components/common/TopNav";
+import { useLayout } from "../context/LayoutContext";
+import Logout from "../pages/Logout";
+import { useEffect, useState } from "react";
+import ProfileSettings from "../pages/ProfileSettings";
 
 const Layout = () => {
+  const { isMinimized } = useLayout();
+
+  const [isClickOnLogout, setIsClickOnLogout] = useState(false);
+
+  const location = useLocation()
+
+
   return (
-    <div className="flex h-screen bg-slate-50">
-      {/* 1. Fixed Sidebar */}
+    <div className="flex relative h-screen bg-slate-100 dark:bg-[#0b0e14] transition-colors duration-300">
+
       <Sidebar />
 
-      {/* 2. Main Content Area */}
-      <div className="flex-1 flex flex-col ml-64 overflow-hidden">
-        {/* Top Navbar yahan aayega */}
-        <TopNav />
+      <div
+        className={`flex-1 flex flex-col min-w-0 overflow-hidden transition-all duration-300 ${isMinimized ? "ml-20" : "ml-64"
+          }`}
+      >
+        {/* Top Navbar */}
+        {location.pathname !== "/settings" && (
+          <div className="sticky top-0 z-10">
+            <TopNav setIsClickOnLogout={setIsClickOnLogout} isClickOnLogout={isClickOnLogout} />
+          </div>
+        )}
 
-        {/* Saara dynamic content (Dashboard, Projects) is Outlet mein load hoga */}
-        <main className="flex-1 overflow-y-auto p-6">
+        {/* Dynamic Content Area */}
+        <main className="flex-1 overflow-y-auto p-6 bg-white dark:bg-[#0d1117] m-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <Outlet />
         </main>
       </div>
+
+
+      {isClickOnLogout && <Logout setIsClickOnLogout={setIsClickOnLogout} />}
+
+
     </div>
   );
 };

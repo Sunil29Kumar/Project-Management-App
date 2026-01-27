@@ -1,16 +1,19 @@
 import AuthProvider from "./AuthContext";
+import { LayoutProvider } from "./LayoutContext";
 import ProjectProvider from "./ProjectContext";
-import ThemeContext from "./ThemeContext";
+import { ThemeContext, ThemeProvider } from "./ThemeContext";
 
 
 export function AppProvider({ children }) {
     return (
         <AuthProvider>
-            <ThemeContext>
-                <ProjectProvider>
-                    {children}
-                </ProjectProvider>
-            </ThemeContext>
+            <ThemeProvider>
+                <LayoutProvider>
+                    <ProjectProvider>
+                        {children}
+                    </ProjectProvider>
+                </LayoutProvider>
+            </ThemeProvider>
         </AuthProvider>
     )
 }

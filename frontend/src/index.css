@@ -28,3 +28,14 @@
   background: rgba(255, 255, 255, 0.2);
   color: white;
 }
+
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Agar aapko custom colors chahiye toh CSS variables use karein */
+/* @theme {
+  --color-dark-bg: #0d1117;
+  --color-dark-surface: #161b22;
+  --color-dark-card: #21262d;
+  --color-dark-border: #30363d;
+} */
