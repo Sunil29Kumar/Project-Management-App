@@ -7,7 +7,6 @@ import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
 import projectRouter from "./routes/project.route.js";
 import cookieParser from 'cookie-parser';
-import checkAuth from './middlewares/authMiddleware.js';
 
 loadEnvFile('.env');
 connectDB();
@@ -34,7 +33,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRouter);
 app.use("/user", userRouter)
 app.use("/projects", projectRouter)
-// app.use("/tasks",)
+
 
 
 app.use((err, req, res, next) => {

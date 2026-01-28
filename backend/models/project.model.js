@@ -17,13 +17,13 @@ const projectSchema = new Schema({
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User", // Jisne project banaya
+        ref: "User", 
         required: true,
     },
     members: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User", // Team members jo is project par kaam karenge
+            ref: "User", 
         }
     ],
     status: {

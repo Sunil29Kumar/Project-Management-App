@@ -38,6 +38,9 @@ export const login = async (req, res) => {
             return res.status(400).json({ success: false, error: "Invalid password" });
         }
 
+    
+
+
 
         // set session 
         const sessionId = crypto.randomUUID()
