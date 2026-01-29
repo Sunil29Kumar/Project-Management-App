@@ -1,6 +1,6 @@
 
 import express, { Router } from "express";
-import { createProject, createTask, deleteProjectById, deleteTaskById, getAllProjects, getTasks, updateProjectById, updateTaskById } from "../controllers/project.controller.js";
+import { createProject, createTask, deleteProjectById, deleteTaskById, getAllProjects, getTasks, inviteMemberToProject, respondToInvitation, updateProjectById, updateTaskById } from "../controllers/project.controller.js";
 import checkAuth from "../middlewares/authMiddleware.js";
 import { validate } from "../middlewares/validateInputs.js";
 import { projectValidations } from "../validators/projectSchema.js";
@@ -24,6 +24,9 @@ router.delete("/:projectId", checkAuth, deleteProjectById)
 
 // Invite member to project
 router.post("/:projectId/invite", checkAuth, inviteMemberToProject)
+
+// Accept or Reject Invitation
+router.post("/invitations/:token/respond", checkAuth, respondToInvitation)
 
 // =========================================
 

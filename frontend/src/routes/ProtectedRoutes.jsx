@@ -1,7 +1,7 @@
 import { Children } from "react";
-import Dashboard from "../pages/Dashboard/Dashboard";
+import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
-import Projects from "../pages/Projects/Projects";
+import Projects from "../pages/Projects";
 import ProfileSettings from "../pages/ProfileSettings";
 
 

@@ -3,6 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useTheme } from "../../context/ThemeContext";
 
 const TopNav = ({setIsClickOnLogout , isClickOnLogout}) => {
+  
   const { logout, user } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   console.log(isClickOnLogout);

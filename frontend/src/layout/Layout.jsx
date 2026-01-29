@@ -2,14 +2,18 @@ import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../components/common/Sidebar";
 import TopNav from "../components/common/TopNav";
 import { useLayout } from "../context/LayoutContext";
-import Logout from "../pages/Logout";
+import Logout from "../components/Forms/LogoutModel";
 import { useEffect, useState } from "react";
 import ProfileSettings from "../pages/ProfileSettings";
+import CreateProjectModal from "../components/projects/CreateProjectModel";
+import { useProject } from "../context/ProjectContext";
+import UpdateProjectModal from "../components/projects/UpdateProjectModal";
 
 const Layout = () => {
   const { isMinimized } = useLayout();
 
   const [isClickOnLogout, setIsClickOnLogout] = useState(false);
+  const {isClickOnNewProject,isClickOnUpdateProject, setIsClickOnNewProject, isClickOnCreateProject, setIsClickOnCreateProject } = useProject();
 
   const location = useLocation()
 
@@ -19,6 +23,7 @@ const Layout = () => {
 
       <Sidebar />
 
+      {/* TopNav and Dynamic Content Area  */}
       <div
         className={`flex-1 flex flex-col min-w-0 overflow-hidden transition-all duration-300 ${isMinimized ? "ml-20" : "ml-64"
           }`}
@@ -38,6 +43,8 @@ const Layout = () => {
 
 
       {isClickOnLogout && <Logout setIsClickOnLogout={setIsClickOnLogout} />}
+      {isClickOnNewProject && <CreateProjectModal />}
+      {/* {isClickOnUpdateProject && <UpdateProjectModal/>} */}
 
 
     </div>

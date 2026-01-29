@@ -2,6 +2,8 @@ import { projectValidations } from "../validators/projectSchema.js";
 import User from "../models/user.model.js";
 import Project from "../models/project.model.js";
 import Task from "../models/task.model.js";
+import Invitation from "../models/invitation.model.js";
+import { sendInvitationEmail } from "../mail/projectInviation.js";
 
 export const createProject = async (req, res) => {
 
@@ -149,8 +151,32 @@ export const inviteMemberToProject = async (req, res) => {
         }
 
 
+        const userToInvite = await User.findOne({ email });
+        if (!userToInvite) {
+            return res.status(404).json({ success: false, error: "User with this email not found" });
+        }
 
-        
+        const token = crypto.randomUUID()
+
+        // Update invitation model
+        const invitation = await Invitation.create({
+            projectId,
+            invitedEmail: email,
+            token,
+            status: "pending",
+            expiresAt: Date.now() + 24 * 60 * 60 * 1000 // 24 hours from now
+        })
+
+        await sendInvitationEmail(email, project.name, `${process.env.FRONTEND_URL}/accept-invite?token=${token}`)
+
+        return res.status(200).json({
+            success: true,
+            message: `Invitation sent to ${email} successfully`,
+            token // In real application, you would send this token via email
+        });
+
+
+
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -160,6 +186,60 @@ export const inviteMemberToProject = async (req, res) => {
 }
 
 
+// Respond To Invitation
+export const respondToInvitation = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { status } = req.body; // Changed from response.status to just status
+        const userId = req.user._id;
+
+        // 1. Basic validation
+        if (!['accepted', 'rejected'].includes(status)) {
+            return res.status(400).json({ success: false, error: "Invalid status provided" });
+        }
+
+        // 2. Find invitation
+        const invitation = await Invitation.findOne({ token });
+        if (!invitation) {
+            return res.status(404).json({ success: false, error: "Invalid or expired invitation token" });
+        }
+
+        // 3. Handle Rejection
+        if (status === "rejected") {
+            invitation.status = "rejected";
+            await invitation.save();
+            return res.status(200).json({ success: true, message: "Invitation rejected" });
+        }
+
+        // 4. Handle Acceptance
+        const project = await Project.findById(invitation.projectId);
+        if (!project) {
+            return res.status(404).json({ success: false, error: "Project not found" });
+        }
+
+        // Check if already a member using a safe comparison
+        const isAlreadyMember = project.members.some(id => id.toString() === userId.toString());
+
+        if (!isAlreadyMember) {
+            project.members.push(userId);
+            await project.save();
+        }
+
+        // 5. Update Invitation status
+        invitation.status = "accepted";
+        await invitation.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Project joined successfully",
+            projectId: project._id
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, error: "Server error while responding" });
+    }
+}
 
 
 // ============== TASK CONTROLLERS =================
