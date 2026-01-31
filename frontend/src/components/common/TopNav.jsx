@@ -10,16 +10,7 @@ const TopNav = ({setIsClickOnLogout , isClickOnLogout}) => {
   
 
   return (
-    <header className="h-16  flex items-center justify-between px-6 sticky top-0 z-10">
-      {/* Search Bar */}
-      <div className="relative w-150">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-        <input 
-          type="text" 
-          placeholder="Search projects..." 
-          className="w-full text-md pl-10 pr-4 py-3 bg-white border-none rounded-full focus:ring-2 focus:ring-blue-500 outline-none "
-        />
-      </div>
+    <header className=" flex items-center justify-end px-6 sticky top-0 z-10  ">
 
       {/* Right Corner Actions */}
       <div className="flex items-center gap-2 ">

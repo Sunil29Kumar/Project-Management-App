@@ -29,7 +29,8 @@ export const createProject = async (req, res) => {
             status,
             owner: userId,
             members: [userId]
-        });
+        })
+
 
         return res.status(201).json({
             success: true,
@@ -57,7 +58,8 @@ export const getAllProjects = async (req, res) => {
             ]
         })
             .sort({ createdAt: -1 }) // Naye projects upar dikhayein
-            .populate("owner", "name email"); // Owner ki basic info bhi mil jayegi
+            .populate("owner", "name email")
+            .populate("members", "name email ");
 
         return res.status(200).json({
             success: true,
@@ -248,7 +250,7 @@ export const respondToInvitation = async (req, res) => {
 export const createTask = async (req, res) => {
     try {
         const { projectId } = req.params;
-        const { title, description, status, assignedTo } = req.body;
+        const { title, description, status, assignedTo, assigneerRole, priority, dueDate } = req.body;
         const userId = req.user._id;
 
         // Check if Project exists
@@ -281,7 +283,10 @@ export const createTask = async (req, res) => {
             title,
             description,
             status,
-            assignedTo
+            assignedTo,
+            assigneerRole,
+            priority,
+            dueDate
         });
 
         return res.status(201).json({ success: true, message: "Task created successfully", task });
@@ -290,7 +295,49 @@ export const createTask = async (req, res) => {
         return res.status(500).json({ success: false, error: "Server error while creating task" });
     }
 }
+export const getAllProjectTasks = async (req, res) => {
+    try {
+        const userId = req.user._id;
 
+        // 1. Pehle saare projects nikalo jisme user member hai
+        const projects = await Project.find({ members: userId });
+        const projectIds = projects.map(p => p._id);
+
+        // 2. Tasks find karo jo:
+        // CASE A: User ko assign hue hon (Assignee)
+        // OR 
+        // CASE B: User us project ka owner ho (is case mein use saare tasks dikhenge)
+
+        const tasks = await Task.find({
+            $or: [
+                { assignedTo: userId },
+                { projectId: { $in: projectIds }, }
+            ]
+        })
+            .populate("assignedTo", "name email")
+            .populate({
+                path: "projectId",
+                select: "name status owner"
+            })
+            .sort({ createdAt: -1 });
+
+        // 3. Final Filtering: 
+        // Agar user owner nahi hai, to use sirf wahi tasks milne chahiye jo use assign hain.
+        // Agar owner hai, to us project ke saare tasks.
+        const filteredTasks = tasks.filter(task => {
+            const isOwner = task.projectId?.owner?.toString() === userId.toString();
+            const isAssignee = task.assignedTo?._id?.toString() === userId.toString();
+
+            return isOwner || isAssignee;
+        });
+
+        return res.status(200).json({ success: true, tasks: filteredTasks });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, error: "Server error while fetching tasks" });
+    }
+};
 export const getTasks = async (req, res) => {
 
     try {

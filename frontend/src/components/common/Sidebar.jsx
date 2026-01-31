@@ -5,7 +5,8 @@ import {
   Settings,
   HelpCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ListTodo
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
@@ -21,6 +22,7 @@ const Sidebar = () => {
     { icon: <FolderKanban size={20} />, label: "Projects", path: "/projects" },
     { icon: <CheckSquare size={20} />, label: "Tasks", path: "/tasks" },
     { icon: <Settings size={20} />, label: "Settings", path: "/settings" },
+
   ];
 
   return (

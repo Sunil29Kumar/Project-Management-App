@@ -24,7 +24,7 @@ function ProtectedRoute() {
                     if (message === "Authentication required. Please log in." ||
                         message === "Session expired. Please log in again.") {
                         showToast.error(message, { toasterId: 'error', })
-                    } 
+                    }
                     // User ko logout state mein set karo
                     setIsAuth(false);
                 }

@@ -8,12 +8,16 @@ import ProfileSettings from "../pages/ProfileSettings";
 import CreateProjectModal from "../components/projects/CreateProjectModel";
 import { useProject } from "../context/ProjectContext";
 import UpdateProjectModal from "../components/projects/UpdateProjectModal";
+import { useTask } from "../context/TaskContext";
+import CreateTaskModal from "../components/tasks/CreateTaskModel";
+import UpdateTaskModal from "../components/tasks/UpdateTaskModal";
 
 const Layout = () => {
   const { isMinimized } = useLayout();
 
   const [isClickOnLogout, setIsClickOnLogout] = useState(false);
-  const {isClickOnNewProject,isClickOnUpdateProject, setIsClickOnNewProject, isClickOnCreateProject, setIsClickOnCreateProject } = useProject();
+  const { isClickOnNewProject, isClickOnUpdateProject, setIsClickOnNewProject, isClickOnCreateProject, setIsClickOnCreateProject } = useProject();
+  const { isClickOnNewTask, isClickOnUpdateTask } = useTask();
 
   const location = useLocation()
 
@@ -36,7 +40,7 @@ const Layout = () => {
         )}
 
         {/* Dynamic Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 bg-white dark:bg-[#0d1117] m-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <main className="flex-1 overflow-y-auto p-6 bg-white dark:bg-[#0d1117] m-1 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <Outlet />
         </main>
       </div>
@@ -44,7 +48,9 @@ const Layout = () => {
 
       {isClickOnLogout && <Logout setIsClickOnLogout={setIsClickOnLogout} />}
       {isClickOnNewProject && <CreateProjectModal />}
-      {/* {isClickOnUpdateProject && <UpdateProjectModal/>} */}
+      {isClickOnNewTask && <CreateTaskModal />}
+      {isClickOnUpdateTask && <UpdateTaskModal />}
+
 
 
     </div>

@@ -1,6 +1,6 @@
 
 import express, { Router } from "express";
-import { createProject, createTask, deleteProjectById, deleteTaskById, getAllProjects, getTasks, inviteMemberToProject, respondToInvitation, updateProjectById, updateTaskById } from "../controllers/project.controller.js";
+import { createProject, createTask, deleteProjectById, deleteTaskById, getAllProjects, getAllProjectTasks, getTasks, inviteMemberToProject, respondToInvitation, updateProjectById, updateTaskById } from "../controllers/project.controller.js";
 import checkAuth from "../middlewares/authMiddleware.js";
 import { validate } from "../middlewares/validateInputs.js";
 import { projectValidations } from "../validators/projectSchema.js";
@@ -37,6 +37,8 @@ router.post("/invitations/:token/respond", checkAuth, respondToInvitation)
 // Create a new task
 router.post("/:projectId/tasks", checkAuth, validate(createTaskValidations), createTask)
 
+// Get all Project Tasks 
+router.get("/tasks", checkAuth, getAllProjectTasks)
 
 // Get all tasks for a project
 router.get("/:projectId/tasks", checkAuth, getTasks)

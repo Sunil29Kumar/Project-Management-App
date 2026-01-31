@@ -13,10 +13,6 @@ export default function ProjectProvider({ children }) {
 
     const [selectedProject, setSelectedProject] = useState(null);
 
-    const createProject = async (name, description, status, tags) => {
-        const data = await createProjectAuth(name, description, status, tags)
-        return data;
-    }
 
     const getAllProjects = async () => {
         const data = await getAllProjectsAuth();
@@ -29,6 +25,16 @@ export default function ProjectProvider({ children }) {
     useEffect(() => {
         getAllProjects();
     }, [])
+
+
+    const createProject = async (name, description, status, tags) => {
+        const data = await createProjectAuth(name, description, status, tags)
+        if (data.success) {
+            showToast.success(data.message || "Project created successfully.", "success");
+            getAllProjects();
+        }
+        return data;
+    }
 
 
     const handleEditClick = (project) => {
