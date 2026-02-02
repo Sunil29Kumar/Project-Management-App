@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { X, Layout, AlignLeft, Target, Activity, Calendar, User, Briefcase, Edit3 } from 'lucide-react';
-import { useTask } from '../../context/TaskContext';
-import { useProject } from '../../context/ProjectContext';
-import { showToast } from "../../utils/toast.js";
+import { useTaskContext } from '../../context/TaskContext';
+import { useProjectContext } from '../../context/ProjectContext';
+import { useTask } from '../../hooks/useTask.js';
 
 
 const UpdateTaskModal = () => {
-    const { updateTask, setIsClickOnUpdateTask, getAllTasks, selectedTask } = useTask();
-    const { projects } = useProject();
+    const { updateTask } = useTask();
+    const { setIsClickOnUpdateTask, selectedTask, loading } = useTaskContext();
+    const { projects } = useProjectContext();
 
     const [formData, setFormData] = useState({
         title: selectedTask?.title || '',
@@ -20,7 +21,6 @@ const UpdateTaskModal = () => {
         assigneerRole: selectedTask?.assigneerRole || 'developer'
     });
 
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (selectedTask) {
@@ -39,19 +39,9 @@ const UpdateTaskModal = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.projectId) return showToast.error("Please select a project");
-        setLoading(true);
+        // if (!formData.projectId) return showToast.error("Please select a project");
 
-        const res = await updateTask(selectedTask._id, formData.title, formData.description, formData.status, formData.assignedTo, formData.priority, formData.dueDate, formData.assigneerRole);
-
-        if (res?.success) {
-            showToast.success(res?.message || "Task updated successfully!");
-            setIsClickOnUpdateTask(false);
-            if (getAllTasks) await getAllTasks();
-        } else {
-            showToast.error(res?.error || "Failed to update task");
-        }
-        setLoading(false);
+        await updateTask(selectedTask._id, formData);
     }
 
     return (

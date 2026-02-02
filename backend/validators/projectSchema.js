@@ -32,6 +32,7 @@ export const projectValidations = z.object({
         .optional()
         .default([]),
 
+
 }).transform((data) => {
     // Sanitize all string fields
     return {
@@ -39,5 +40,6 @@ export const projectValidations = z.object({
         name: clean(data.name),
         description: data.description ? clean(data.description) : data.description,
         tags: data.tags ? data.tags.map(tag => clean(tag)) : data.tags,
+       
     };
 });

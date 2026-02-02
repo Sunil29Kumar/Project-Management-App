@@ -2,6 +2,7 @@ import { mongoose, Schema } from "mongoose";
 
 
 const invitationSchema = new Schema({
+    projectId: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },
     invitedEmail: { type: String, required: true },
     token: { type: String, required: true },
     status: { type: String, enum: ["pending", "accepted", "rejected"], default: "pending" },

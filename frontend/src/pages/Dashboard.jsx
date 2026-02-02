@@ -1,16 +1,16 @@
 import StatCard from '../components/dashboard/StatCard';
 import ProjectCard from '../components/dashboard/ProjectCard';
 import { Briefcase, CheckCircle, Plus, Users, ListTodo, ArrowRight } from 'lucide-react';
-import { useProject } from '../context/ProjectContext';
+import {  useProjectContext } from '../context/ProjectContext';
 import { Link } from 'react-router-dom';
-import { useTask } from '../context/TaskContext';
+import {  useTaskContext } from '../context/TaskContext';
 
 const Dashboard = () => {
-  const { projects, setIsClickOnNewProject } = useProject();
-  const { allProjectTasks, setIsClickOnNewTask } = useTask()
+  const { projects, setIsClickOnNewProject } = useProjectContext();
+  const { allProjectTasks, setIsClickOnNewTask } = useTaskContext()
 
   const activeProjects = projects?.filter(p => p.status === 'active');
-  const taskCompleted = allProjectTasks?.filter(t => t.status === 'completed');
+  const taskCompleted = allProjectTasks?.filter(t => t.status === 'done');
   const totalTeamMember = projects?.reduce((acc, project) => acc + project?.members.length, 0);
 
   return (

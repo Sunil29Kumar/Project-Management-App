@@ -2,7 +2,7 @@ import AuthProvider from "./AuthContext";
 import { LayoutProvider } from "./LayoutContext";
 import ProjectProvider from "./ProjectContext";
 import TaskProvider from "./TaskContext";
-import { ThemeContext, ThemeProvider } from "./ThemeContext";
+import {  ThemeProvider } from "./ThemeContext";
 import UserProvider from "./UserContext";
 
 

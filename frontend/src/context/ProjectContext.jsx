@@ -7,74 +7,36 @@ export const ProjectContext = createContext();
 export default function ProjectProvider({ children }) {
 
     const [projects, setProjects] = useState();
+    const [selectedProject, setSelectedProject] = useState(null);
+
     const [isClickOnNewProject, setIsClickOnNewProject] = useState(false);
     const [isClickOnCreateProject, setIsClickOnCreateProject] = useState(false);
     const [isClickOnUpdateProject, setIsClickOnUpdateProject] = useState(false);
 
-    const [selectedProject, setSelectedProject] = useState(null);
 
 
     const getAllProjects = async () => {
-        const data = await getAllProjectsAuth();
-        if (data?.success) {
-            setProjects(data?.projects);
+        try {
+            const response = await getAllProjectsAuth();
+            setProjects(response?.data?.projects);
+        } catch (error) {
+            showToast.error(error?.message || "Failed to fetch projects.");
         }
-        return data;
     }
-
     useEffect(() => {
-        getAllProjects();
+        getAllProjects()
     }, [])
 
 
-    const createProject = async (name, description, status, tags) => {
-        const data = await createProjectAuth(name, description, status, tags)
-        if (data.success) {
-            showToast.success(data.message || "Project created successfully.", "success");
-            getAllProjects();
-        }
-        return data;
-    }
-
-
-    const handleEditClick = (project) => {
-        setSelectedProject(project);
-        setIsClickOnUpdateProject(true);
-    };
-
-    const updateProject = async (projectId, name, description, status, tags) => {
-        const data = await updateProjectAuth(projectId, name, description, status, tags);
-        return data;
-    }
-
-
-    const deleteProject = async (projectId) => {
-        const data = await deleteProjectAuth(projectId);
-        if (data.success) {
-            showToast.success(data.message || "Project deleted successfully.", "success");
-            getAllProjects();
-        }
-        else {
-            showToast.error(data.error || "Failed to delete project.", "error");
-        }
-        return data;
-    }
-
-
     return <ProjectContext.Provider value={{
-        projects, setProjects, createProject,
+        projects, setProjects,
         isClickOnNewProject, setIsClickOnNewProject,
         isClickOnCreateProject, setIsClickOnCreateProject,
         isClickOnUpdateProject, setIsClickOnUpdateProject,
-        getAllProjects,
-        selectedProject,
-        handleEditClick,
-        updateProject,
-        deleteProject
+        selectedProject, getAllProjects, setSelectedProject
     }}>
         {children}
     </ProjectContext.Provider>
 }
 
-
-export const useProject = () => useContext(ProjectContext);
+export const useProjectContext = () => useContext(ProjectContext);

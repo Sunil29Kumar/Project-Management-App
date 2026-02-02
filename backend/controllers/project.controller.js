@@ -31,7 +31,6 @@ export const createProject = async (req, res) => {
             members: [userId]
         })
 
-
         return res.status(201).json({
             success: true,
             message: "Project Created Successfully",
@@ -140,6 +139,9 @@ export const inviteMemberToProject = async (req, res) => {
         const userId = req.user._id;
         const project = await Project.findById(projectId);
 
+        console.log(email);
+
+
         if (!project) {
             return res.status(404).json({ success: false, error: "Project not found" });
         }
@@ -152,32 +154,45 @@ export const inviteMemberToProject = async (req, res) => {
             });
         }
 
+        if (email.length > 0) {
+            for (const mail of email) {
 
-        const userToInvite = await User.findOne({ email });
-        if (!userToInvite) {
-            return res.status(404).json({ success: false, error: "User with this email not found" });
+                // check if email is already a member
+                // const isAlreadyMember = project.members.some(async (memberId) => {
+                //     const member = await User.findById(memberId);
+                //     return member.email === mail;
+                // });
+
+                // if (isAlreadyMember) {
+                //     return res.status(400).json({
+                //         success: false,
+                //         error: `${mail} is already a member of the project`
+                //     });
+                // }
+
+
+                const token = crypto.randomUUID()
+
+                // Update invitation model
+                const invitation = await Invitation.create({
+                    projectId,
+                    invitedEmail: mail,
+                    token,
+                    status: "pending",
+                    expiresAt: Date.now() + 24 * 60 * 60 * 1000 // 24 hours from now
+                })
+
+
+                await sendInvitationEmail(mail, project.name, `${process.env.FRONTEND_URL}/accept-invite?token=${token}`)
+
+                return res.status(200).json({
+                    success: true,
+                    message: `Invitation sent to ${mail} successfully`,
+                    token
+                });
+            }
+
         }
-
-        const token = crypto.randomUUID()
-
-        // Update invitation model
-        const invitation = await Invitation.create({
-            projectId,
-            invitedEmail: email,
-            token,
-            status: "pending",
-            expiresAt: Date.now() + 24 * 60 * 60 * 1000 // 24 hours from now
-        })
-
-        await sendInvitationEmail(email, project.name, `${process.env.FRONTEND_URL}/accept-invite?token=${token}`)
-
-        return res.status(200).json({
-            success: true,
-            message: `Invitation sent to ${email} successfully`,
-            token // In real application, you would send this token via email
-        });
-
-
 
     } catch (error) {
         return res.status(500).json({

@@ -57,7 +57,7 @@ export const updateTaskValidations = z.object({
   status: z.enum(["todo", "in-progress", "done"]).optional(),
   assignedTo: objectIdSchema.optional(),
   priority: z.enum(["low", "medium", "high", "critical"]).optional(),
-  dueDate: z.date().optional(),
+  dueDate: z.string().optional(),
   assigneerRole: z
     .enum(["developer", "qa/tester", "designer", "devops", "manager", "lead"])
     .optional(),

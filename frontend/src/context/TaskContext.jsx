@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { createTaskAuth, deleteTaskAuth, getAllProjectTasksAuth, updateTaskAuth } from "../api/taskApi.js";
-import { useProject } from "./ProjectContext.jsx";
+import {  getAllProjectTasksAuth } from "../api/taskApi.js";
+import { showToast } from "../utils/toast.js";
+
 
 
 export const TaskContext = createContext()
@@ -13,49 +14,24 @@ export default function TaskProvider({ children }) {
     const [isClickOnNewTask, setIsClickOnNewTask] = useState(false);
     const [isClickOnCreateTask, setIsClickOnCreateTask] = useState(false);
     const [isClickOnUpdateTask, setIsClickOnUpdateTask] = useState(false);
-    
+
     const [selectedTask, setSelectedTask] = useState(null);
+    const [loading, setLoading] = useState(false);
 
 
     const getAllTasks = async () => {
-        const data = await getAllProjectTasksAuth();
-        console.log("tasks = ", data);
-
-        if (data?.success) {
-            setAllProjectTasks(data?.tasks);
+        try {
+            const response = await getAllProjectTasksAuth();
+            console.log("tasks = ", response);
+            setAllProjectTasks(response?.data?.tasks);
+        } catch (error) {
+            showToast.error(error?.message || "Failed to fetch tasks.");
         }
-        return data;
     }
 
     useEffect(() => {
         getAllTasks();
     }, [])
-
-
-    const handleTaskEditClick = (task) => {
-        setSelectedTask(task);
-        setIsClickOnUpdateTask(true);
-    };
-
-    const updateTask = async (taskId, title, description, status, assignedTo, priority, dueDate, assigneerRole) => {
-        const data = await updateTaskAuth(taskId, title, description, status, assignedTo, priority, dueDate, assigneerRole);
-        return data;
-    }
-
-
-
-    const createTask = async (projectId, title, description, status, assignedTo, priority, dueDate, assigneerRole) => {
-        console.log("Context Data:", { projectId, title, dueDate });
-        const data = await createTaskAuth(projectId, title, description, status, assignedTo, priority, dueDate, assigneerRole);
-        return data;
-    }
-
-
-    const deleteTask = async (taskId) => {
-        const data = await deleteTaskAuth(taskId);
-        return data; 
-    }
-
 
 
 
@@ -64,13 +40,12 @@ export default function TaskProvider({ children }) {
         , isClickOnNewTask, setIsClickOnNewTask,
         isClickOnCreateTask, setIsClickOnCreateTask,
         isClickOnUpdateTask, setIsClickOnUpdateTask,
-        createTask,
-        selectedTask, setSelectedTask
-        , handleTaskEditClick , updateTask , deleteTask
+        selectedTask, setSelectedTask,
+        loading, setLoading
     }}>
         {children}
     </TaskContext.Provider>
 }
 
 
-export const useTask = () => useContext(TaskContext);
+export const useTaskContext = () => useContext(TaskContext);

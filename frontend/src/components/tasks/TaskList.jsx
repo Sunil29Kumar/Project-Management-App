@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { MoreVertical, Calendar as CalendarIcon, CheckCircle2, Circle, Clock, Edit3, Trash2, Shield, ClipboardList, Plus } from 'lucide-react';
-import { useTask } from '../../context/TaskContext';
-import { useProject } from '../../context/ProjectContext';
+import {  useTaskContext } from '../../context/TaskContext';
 import { useUser } from '../../context/UserContext';
-import { showToast } from '../../utils/toast';
+import { showToast } from '../../utils/toast.js';
+import { useTask } from '../../hooks/useTask.js';
 
 const TaskList = ({ filteredTasks }) => {
     const [openMenuId, setOpenMenuId] = useState(null);
-    const { setIsClickOnUpdateTask, handleTaskEditClick, deleteTask, getAllTasks, setIsClickOnNewTask } = useTask();
+    const { handleTaskEditClick, deleteTask } = useTask();
+    const { setIsClickOnUpdateTask, setIsClickOnNewTask, getAllTasks } = useTaskContext();
     const { user } = useUser()
 
 

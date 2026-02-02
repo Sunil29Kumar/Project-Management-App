@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Calendar, MoreVertical, ArrowRight, Pencil, Trash2, Star, Share2 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import { useProject } from '../../context/ProjectContext';
+import { useProject } from '../../hooks/useProject.js';
 
 const ProjectCard = ({ project }) => {
 

@@ -1,8 +1,8 @@
 import { Plus, LayoutGrid, List } from 'lucide-react';
-import { useProject } from '../../context/ProjectContext';
+import { useProjectContext } from '../../context/ProjectContext';
 
 const ProjectHeader = () => {
-    const {setIsClickOnNewProject} = useProject();
+    const {setIsClickOnNewProject} = useProjectContext();
   
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

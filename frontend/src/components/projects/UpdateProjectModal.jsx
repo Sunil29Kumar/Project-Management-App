@@ -1,39 +1,24 @@
 import { useState, useEffect } from 'react';
 import { X, Layout, AlignLeft, RefreshCw, Tag, Activity } from 'lucide-react';
-import { useProject } from '../../context/ProjectContext';
 import { showToast } from "../../utils/toast.js"
+import { useProject } from '../../hooks/useProject.js';
+import { useProjectContext } from '../../context/ProjectContext.jsx';
 
 const UpdateProjectModal = () => {
-    // Maan lete hain context mein 'selectedProject' aur 'setIsEditing' states hain
-    const { setIsClickOnUpdateProject ,selectedProject , updateProject, getAllProjects } = useProject();
+    const { updateProject, loading } = useProject();
+    const {selectedProject,setIsClickOnUpdateProject} = useProjectContext();
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({  
         name: selectedProject?.name || '',
         description: selectedProject?.description || '',
         status: selectedProject?.status || 'active',
         tags: selectedProject?.tags || []
     });
 
-    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        const data = await updateProject(
-            selectedProject._id,
-            formData.name,
-            formData.description,
-            formData.status,
-            formData.tags
-        );
-        setLoading(false);
-        if (data?.success) {
-            showToast.success(data.message || "Project updated successfully.", "success");
-            getAllProjects();
-            setIsClickOnUpdateProject(false);
-        } else {
-            showToast.error(data.error || "Failed to update project.", "error");
-        }
+        await updateProject(selectedProject._id, formData);
     };
 
     return (

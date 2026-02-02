@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { X, Layout, AlignLeft, Target, Activity, Calendar, User, Briefcase } from 'lucide-react';
-import { useTask } from '../../context/TaskContext';
-import { useProject } from '../../context/ProjectContext';
+import { useTaskContext } from '../../context/TaskContext';
+import { useProjectContext } from '../../context/ProjectContext';
 import { showToast } from "../../utils/toast.js";
+import { useTask } from '../../hooks/useTask.js';
 
 const CreateTaskModal = () => {
-    const { createTask, setIsClickOnNewTask, getAllTasks } = useTask();
-    const { projects } = useProject();
+    const { createTask } = useTask();
+    const { setIsClickOnNewTask, getAllTasks, loading } = useTaskContext();
+    const { projects } = useProjectContext();
 
     const [formData, setFormData] = useState({
         title: '',
@@ -19,49 +21,16 @@ const CreateTaskModal = () => {
         assigneerRole: 'developer'
     });
 
-    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.projectId) return showToast.error("Please select a project");
-        setLoading(true);
+        // if (!formData.projectId) return showToast.error("Please select a project");
         const dataToSend = {
             ...formData,
-            dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : undefined
+            dueDate: formData.dueDate ? new Date(formData.dueDate) : undefined
         };
 
-        console.log(dataToSend);
-
-
-
-        const res = await createTask(
-            dataToSend.projectId,
-            dataToSend.title,
-            dataToSend.description,
-            dataToSend.status,
-            dataToSend.assignedTo,
-            dataToSend.priority,
-            dataToSend.dueDate,
-            dataToSend.assigneerRole
-        );
-        if (res?.success) {
-            showToast.success(res?.message || "Task created successfully!");
-            setIsClickOnNewTask(false);
-            await getAllTasks();
-        } else {
-            let finalErrorMessage = "An error occurred";
-
-            if (typeof res?.error === 'object' && res.error !== null) {
-                const firstKey = Object.keys(res.error)[0];
-                const message = res.error[firstKey];
-                finalErrorMessage = Array.isArray(message) ? message[0] : JSON.stringify(res.error);
-            } else if (typeof res?.error === 'string') {
-                finalErrorMessage = res.error;
-            }
-
-            showToast.error(finalErrorMessage);
-        }
-        setLoading(false);
+        await createTask(dataToSend.projectId, dataToSend);
     }
 
     return (

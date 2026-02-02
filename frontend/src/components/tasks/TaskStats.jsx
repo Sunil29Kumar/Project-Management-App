@@ -1,9 +1,9 @@
 import { Clock, CheckCircle2, AlertCircle, ListTodo } from 'lucide-react';
-import { useTask } from '../../context/TaskContext';
+import { useTaskContext } from '../../context/TaskContext';
 
 const TaskStats = () => {
 
-  const { allProjectTasks } = useTask();
+  const { allProjectTasks } = useTaskContext();
 
   // 1. Pehle counts nikaal lo
   const total = allProjectTasks?.length;

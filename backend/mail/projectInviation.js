@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const sendInvitationEmail = async (email, projectName, inviteLink) => {
   try {
     await resend.emails.send({
-      from: 'DevSync <onboarding@resend.dev>', 
+      from: 'DevSync <invite@devsync.bastastorage.me>', 
       to: email,
       subject: `Invitation: Join project "${projectName}" on DevSync`,
       html: `

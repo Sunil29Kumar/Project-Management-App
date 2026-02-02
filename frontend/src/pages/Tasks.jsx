@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { Plus, Search, Filter } from 'lucide-react';
 import TaskStats from '../components/tasks/TaskStats';
 import TaskList from '../components/tasks/TaskList';
-import { useTask } from '../context/TaskContext';
-import { useProject } from '../context/ProjectContext';
-import CreateTaskModal from '../components/tasks/CreateTaskModel';
+import {  useTaskContext } from '../context/TaskContext';
 
 const Tasks = () => {
 
-    const { allProjectTasks , isClickOnNewTask, setIsClickOnNewTask } = useTask();
+    const { allProjectTasks , isClickOnNewTask, setIsClickOnNewTask } = useTaskContext();
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredTasks = allProjectTasks?.filter((task) => {

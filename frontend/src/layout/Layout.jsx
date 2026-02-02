@@ -3,12 +3,10 @@ import Sidebar from "../components/common/Sidebar";
 import TopNav from "../components/common/TopNav";
 import { useLayout } from "../context/LayoutContext";
 import Logout from "../components/Forms/LogoutModel";
-import { useEffect, useState } from "react";
-import ProfileSettings from "../pages/ProfileSettings";
+import { useState } from "react";
 import CreateProjectModal from "../components/projects/CreateProjectModel";
-import { useProject } from "../context/ProjectContext";
-import UpdateProjectModal from "../components/projects/UpdateProjectModal";
-import { useTask } from "../context/TaskContext";
+import { useProjectContext } from "../context/ProjectContext";
+import { useTaskContext } from "../context/TaskContext";
 import CreateTaskModal from "../components/tasks/CreateTaskModel";
 import UpdateTaskModal from "../components/tasks/UpdateTaskModal";
 
@@ -16,8 +14,8 @@ const Layout = () => {
   const { isMinimized } = useLayout();
 
   const [isClickOnLogout, setIsClickOnLogout] = useState(false);
-  const { isClickOnNewProject, isClickOnUpdateProject, setIsClickOnNewProject, isClickOnCreateProject, setIsClickOnCreateProject } = useProject();
-  const { isClickOnNewTask, isClickOnUpdateTask } = useTask();
+  const { isClickOnNewProject, } = useProjectContext();
+  const { isClickOnNewTask, isClickOnUpdateTask } = useTaskContext();
 
   const location = useLocation()
 
