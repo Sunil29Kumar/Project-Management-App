@@ -6,10 +6,13 @@ import { Folder } from 'lucide-react';
 import { useProjectContext } from '../context/ProjectContext';
 import UpdateProjectModal from '../components/projects/UpdateProjectModal';
 import { useEffect } from 'react';
+import { useTaskContext } from '../context/TaskContext';
 
 const Projects = () => {
 
   const { projects, isClickOnUpdateProject, getAllProjects } = useProjectContext();
+  const { projectTasks, getTasksByProjectId, } = useTaskContext()
+
   const [filter, setFilter] = useState('all');
 
   const filteredProjects = projects?.filter(p =>
@@ -36,7 +39,7 @@ const Projects = () => {
       {filteredProjects && filteredProjects?.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map(project => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={project.id} project={project} getTasksByProjectId={getTasksByProjectId} />
           ))}
         </div>
       ) : (

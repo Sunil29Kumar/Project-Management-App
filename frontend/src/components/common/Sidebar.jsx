@@ -21,6 +21,7 @@ const Sidebar = () => {
     { icon: <LayoutDashboard size={20} />, label: "Dashboard", path: "/dashboard" },
     { icon: <FolderKanban size={20} />, label: "Projects", path: "/projects" },
     { icon: <CheckSquare size={20} />, label: "Tasks", path: "/tasks" },
+    // { icon: <Settings size={20} />, label: "Board", path: "/board" },
     { icon: <Settings size={20} />, label: "Settings", path: "/settings" },
 
   ];

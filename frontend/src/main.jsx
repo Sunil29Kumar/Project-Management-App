@@ -6,7 +6,7 @@ import { AppProvider } from './context/AppProvider.jsx'
 import { Toaster } from 'sonner';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <AppProvider>
       <App />
       <Toaster
@@ -18,5 +18,5 @@ createRoot(document.getElementById('root')).render(
       />
       <Toaster id="error" position='top-right' richColors />
     </AppProvider>
-  </StrictMode>,
+  // </StrictMode>,
 )

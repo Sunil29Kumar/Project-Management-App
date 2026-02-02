@@ -4,6 +4,7 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 import Projects from "../pages/Projects";
 import ProfileSettings from "../pages/ProfileSettings";
 import Tasks from "../pages/Tasks";
+import KanbanBoard from "../pages/KanbanBoard";
 
 
 export const protectedRoutes = [
@@ -13,8 +14,10 @@ export const protectedRoutes = [
         children: [
             { path:"dashboard", element: <Dashboard /> },
             { path: "projects", element: <Projects /> },
+            { path: "projects/:projectId/board", element: <KanbanBoard /> },
             { path: "tasks", element: <Tasks /> },
-            { path: "settings", element: <ProfileSettings /> }
+            { path: "settings", element: <ProfileSettings /> },
+            {path:"board", element:<KanbanBoard/>}
         ]
     }
 

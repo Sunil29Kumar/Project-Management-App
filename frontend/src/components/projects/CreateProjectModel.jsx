@@ -67,7 +67,7 @@ const CreateProjectModal = () => {
         console.log(formData.members);
         
         
-        if (response && response.success) {
+        if (response && response.success && formData.members.length > 0) {
             await inviteMemberToProject(response.project._id, formData.members);
         }
     }

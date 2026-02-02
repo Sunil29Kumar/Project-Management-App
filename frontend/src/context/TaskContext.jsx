@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import {  getAllProjectTasksAuth } from "../api/taskApi.js";
+import {  getAllProjectTasksAuth, getProjectTasksAuth } from "../api/taskApi.js";
 import { showToast } from "../utils/toast.js";
-
 
 
 export const TaskContext = createContext()
@@ -10,6 +9,7 @@ export const TaskContext = createContext()
 export default function TaskProvider({ children }) {
 
     const [allProjectTasks, setAllProjectTasks] = useState()
+    const [projectTasks, setProjectTasks] = useState([]);
 
     const [isClickOnNewTask, setIsClickOnNewTask] = useState(false);
     const [isClickOnCreateTask, setIsClickOnCreateTask] = useState(false);
@@ -34,10 +34,20 @@ export default function TaskProvider({ children }) {
     }, [])
 
 
+    const getTasksByProjectId = async (projectId) => {
+        try {
+            const response = await getProjectTasksAuth(projectId);
+            setProjectTasks(response?.data?.tasks);
+        } catch (error) {
+            showToast.error(error?.message || "Failed to fetch tasks for the project.");
+        }
+    }
+    
 
     return <TaskContext.Provider value={{
-        allProjectTasks, getAllTasks
-        , isClickOnNewTask, setIsClickOnNewTask,
+        allProjectTasks, getAllTasks,
+        projectTasks, getTasksByProjectId,
+        isClickOnNewTask, setIsClickOnNewTask,
         isClickOnCreateTask, setIsClickOnCreateTask,
         isClickOnUpdateTask, setIsClickOnUpdateTask,
         selectedTask, setSelectedTask,

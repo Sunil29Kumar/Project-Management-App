@@ -30,20 +30,22 @@ export const useTask = () => {
     };
 
 
-    const updateTask = async (taskId, data) => {
-        setLoading(true);
+    const updateTask = async (taskId, data, silent = false) => {
+        if (!silent) setLoading(true);
         try {
-            const response = await updateTaskAuth(taskId, data.title, data.description, data.status, data.assignedTo, data.priority, data.dueDate, data.assigneerRole);
-            console.log("udate data = ",response);
-            
-            showToast.success(response.message || "Task updated successfully.", "success");
-            setIsClickOnUpdateTask(false);
-            await getAllTasks();
+            const response = await updateTaskAuth(taskId, data?.title, data?.description, data?.status, data?.assignedTo, data?.priority, data?.dueDate, data?.assigneerRole);
+
+            if (!silent) {
+                await getAllTasks();
+                showToast.success(response.message || "Task updated successfully.", "success");
+                setIsClickOnUpdateTask(false);
+            }
+            return response?.data;
         } catch (error) {
             showToast.error(error.response?.data?.error || "Failed to update task.");
         }
         finally {
-            setLoading(false);
+            if (!silent) setLoading(false);
         }
     }
 

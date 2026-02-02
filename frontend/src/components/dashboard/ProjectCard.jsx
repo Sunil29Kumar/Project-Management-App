@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Calendar, MoreVertical, ArrowRight, Pencil, Trash2, Star, Share2 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useProject } from '../../hooks/useProject.js';
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, getTasksByProjectId }) => {
 
-  const { setIsClickOnUpdateProject, handleEditClick,deleteProject } = useProject();
+  const { setIsClickOnUpdateProject, handleEditClick, deleteProject } = useProject();
   const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
 
@@ -106,10 +106,14 @@ const ProjectCard = ({ project }) => {
           </div>
         </div>
 
-        <button className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 group-hover:bg-indigo-600 group-hover:text-white text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-bold transition-all active:scale-95 cursor-pointer shadow-sm group-hover:shadow-indigo-200">
+        <Link to={`/projects/${project._id}/board`}
+          onClick={() => {
+            getTasksByProjectId(project._id);
+          }}
+          className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 group-hover:bg-indigo-600 group-hover:text-white text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-bold transition-all active:scale-95 cursor-pointer shadow-sm group-hover:shadow-indigo-200">
           Open
           <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-        </button>
+        </Link>
       </div>
 
       {/* Admin Badge */}
