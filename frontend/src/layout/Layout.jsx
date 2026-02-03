@@ -9,12 +9,13 @@ import { useProjectContext } from "../context/ProjectContext";
 import { useTaskContext } from "../context/TaskContext";
 import CreateTaskModal from "../components/tasks/CreateTaskModel";
 import UpdateTaskModal from "../components/tasks/UpdateTaskModal";
+import InviteMultipleMembers from "../components/projects/InviteMultipleMembers";
 
 const Layout = () => {
   const { isMinimized } = useLayout();
 
   const [isClickOnLogout, setIsClickOnLogout] = useState(false);
-  const { isClickOnNewProject, } = useProjectContext();
+  const { isClickOnNewProject, inviteMembers } = useProjectContext();
   const { isClickOnNewTask, isClickOnUpdateTask } = useTaskContext();
 
   const location = useLocation()
@@ -48,6 +49,7 @@ const Layout = () => {
       {isClickOnNewProject && <CreateProjectModal />}
       {isClickOnNewTask && <CreateTaskModal />}
       {isClickOnUpdateTask && <UpdateTaskModal />}
+      {inviteMembers.isClickOnInviteMembers && <InviteMultipleMembers />}
 
 
 

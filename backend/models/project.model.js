@@ -26,6 +26,10 @@ const projectSchema = new Schema({
             ref: "User", 
         }
     ],
+    totalTasks: {
+        type: Number,
+        default: 0,
+    },
     status: {
         type: String,
         enum: ["active", "completed", "archived"],

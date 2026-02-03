@@ -12,6 +12,9 @@ export default function ProjectProvider({ children }) {
     const [isClickOnNewProject, setIsClickOnNewProject] = useState(false);
     const [isClickOnCreateProject, setIsClickOnCreateProject] = useState(false);
     const [isClickOnUpdateProject, setIsClickOnUpdateProject] = useState(false);
+    const [inviteMembers, setInviteMembers] = useState({
+        isClickOnInviteMembers: false, projectId: null
+    });
 
 
 
@@ -33,6 +36,7 @@ export default function ProjectProvider({ children }) {
         isClickOnNewProject, setIsClickOnNewProject,
         isClickOnCreateProject, setIsClickOnCreateProject,
         isClickOnUpdateProject, setIsClickOnUpdateProject,
+        inviteMembers, setInviteMembers,
         selectedProject, getAllProjects, setSelectedProject
     }}>
         {children}

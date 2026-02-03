@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import { ProjectContext, useProjectContext } from "../context/ProjectContext";
-import { createProjectAuth, deleteProjectAuth, inviteMemberToProjectAuth, respondToInvitationAuth, updateProjectAuth } from "../api/projectApi.js";
+import { createProjectAuth, deleteProjectAuth, inviteMemberToProjectAuth, inviteMultipleMembersToProjectAuth, respondToInvitationAuth, updateProjectAuth } from "../api/projectApi.js";
 import { showToast } from "../utils/toast.js";
 import { useState } from "react";
 
 
 export const useProject = () => {
-    const { getAllProjects, setSelectedProject, setIsClickOnNewProject, setIsClickOnCreateProject, setIsClickOnUpdateProject, } = useProjectContext(ProjectContext);
+    const { getAllProjects, setSelectedProject, setIsClickOnNewProject, setIsClickOnCreateProject, setIsClickOnUpdateProject,setInviteMembers } = useProjectContext(ProjectContext);
 
     const [loading, setLoading] = useState(false);
 
@@ -89,6 +89,22 @@ export const useProject = () => {
     }
 
 
+    const inviteMultipleMembersToProject = async (projectId, email) => {
+        setLoading(true);
+        try {
+            const response = await inviteMultipleMembersToProjectAuth(projectId, email);
+            showToast.success(response.data.message || "Invitations sent successfully.", "success");
+            setInviteMembers({ isClickOnInviteMembers: false, projectId: null });
+            console.log(response);
+            
+            return response?.data;
+        } catch (err) {
+            showToast.error(err.response?.data?.error || "Failed to send invitations.");
+        }
+        finally { setLoading(false); }
+    }
 
-    return { createProject, handleEditClick, updateProject, deleteProject, inviteMemberToProject, respondToInvitation, loading };
+
+
+    return { createProject, handleEditClick, updateProject, deleteProject, inviteMemberToProject, inviteMultipleMembersToProject, respondToInvitation, loading };
 }

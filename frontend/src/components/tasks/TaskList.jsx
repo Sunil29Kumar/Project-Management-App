@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { MoreVertical, Calendar as CalendarIcon, CheckCircle2, Circle, Clock, Edit3, Trash2, Shield, ClipboardList, Plus } from 'lucide-react';
-import {  useTaskContext } from '../../context/TaskContext';
+import { useTaskContext } from '../../context/TaskContext';
 import { useUser } from '../../context/UserContext';
 import { showToast } from '../../utils/toast.js';
 import { useTask } from '../../hooks/useTask.js';
+import { useNavigate } from 'react-router-dom';
 
 const TaskList = ({ filteredTasks }) => {
     const [openMenuId, setOpenMenuId] = useState(null);
@@ -11,6 +12,7 @@ const TaskList = ({ filteredTasks }) => {
     const { setIsClickOnUpdateTask, setIsClickOnNewTask, getAllTasks } = useTaskContext();
     const { user } = useUser()
 
+    const navigate = useNavigate()
 
 
     const getPriorityStyles = (p) => {
@@ -66,7 +68,9 @@ const TaskList = ({ filteredTasks }) => {
                                 const showActionButtons = isOwner;
 
                                 return (
-                                    <tr key={task._id} className="group hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-all">
+                                    <tr key={task._id}
+                                        onClick={() => navigate(`/projects/${task.projectId?._id}/board`)}
+                                        className="group cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-all">
                                         {/* Task Title & Date */}
                                         <td className="px-6 py-5">
                                             <div className="flex flex-col gap-1.5">
@@ -127,7 +131,10 @@ const TaskList = ({ filteredTasks }) => {
                                         </td>
 
                                         {/* Action Button */}
-                                        <td className="px-6 py-5 text-right relative">
+                                        <td
+                                            onClick={(e)=> e.stopPropagation() }
+                                            className="px-6 py-5 z-10 text-right relative">
+
                                             {showActionButtons && (
                                                 <button
                                                     onClick={() => setOpenMenuId(openMenuId === task._id ? null : task._id)}

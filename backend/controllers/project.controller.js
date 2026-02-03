@@ -113,6 +113,7 @@ export const deleteProjectById = async (req, res) => {
     try {
         const userId = req.user._id;
         const project = await Project.findOneAndDelete({ _id: projectId, userId: userId });
+        const tasks = await Task.deleteMany({ projectId: projectId });
         if (!project) {
             return res.status(404).json({
                 success: false,
@@ -154,45 +155,38 @@ export const inviteMemberToProject = async (req, res) => {
             });
         }
 
-        if (email.length > 0) {
-            for (const mail of email) {
-
-                // check if email is already a member
-                // const isAlreadyMember = project.members.some(async (memberId) => {
-                //     const member = await User.findById(memberId);
-                //     return member.email === mail;
-                // });
-
-                // if (isAlreadyMember) {
-                //     return res.status(400).json({
-                //         success: false,
-                //         error: `${mail} is already a member of the project`
-                //     });
-                // }
-
-
-                const token = crypto.randomUUID()
-
-                // Update invitation model
-                const invitation = await Invitation.create({
-                    projectId,
-                    invitedEmail: mail,
-                    token,
-                    status: "pending",
-                    expiresAt: Date.now() + 24 * 60 * 60 * 1000 // 24 hours from now
-                })
-
-
-                await sendInvitationEmail(mail, project.name, `${process.env.FRONTEND_URL}/accept-invite?token=${token}`)
-
-                return res.status(200).json({
-                    success: true,
-                    message: `Invitation sent to ${mail} successfully`,
-                    token
-                });
-            }
-
+        // Check if email array exists and has elements
+        if (!Array.isArray(email) || email.length === 0) {
+            return res.status(400).json({ success: false, error: "No emails provided" });
         }
+
+        const invitationResults = [];
+
+        // Send invitation to each email
+        for (const mail of email) {
+
+            const token = crypto.randomUUID()
+
+            // Update invitation model
+            const invitation = await Invitation.create({
+                projectId,
+                invitedEmail: mail,
+                token,
+                status: "pending",
+                expiresAt: Date.now() + 24 * 60 * 60 * 1000 // 24 hours from now
+            })
+
+            await sendInvitationEmail(mail, project.name, `${process.env.FRONTEND_URL}/accept-invite?token=${token}`);
+            invitationResults.push(mail);
+        }
+
+
+        return res.status(200).json({
+            success: true,
+            message: `Invitations sent successfully to: ${invitationResults.join(", ")}`,
+            // token
+        });
+
 
     } catch (error) {
         return res.status(500).json({
@@ -292,6 +286,8 @@ export const createTask = async (req, res) => {
             }
         }
 
+        const taskCount = await Task.countDocuments({ projectId });
+
         // Create Task
         const task = await Task.create({
             projectId,
@@ -301,6 +297,7 @@ export const createTask = async (req, res) => {
             assignedTo,
             assigneerRole,
             priority,
+            totalTasks: taskCount,
             dueDate
         });
 

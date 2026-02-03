@@ -5,7 +5,7 @@ import { useProjectContext } from '../../context/ProjectContext.jsx';
 
 const CreateProjectModal = () => {
     const { createProject, loading, inviteMemberToProject } = useProject();
-    const { setIsClickOnNewProject } = useProjectContext();
+    const { setInviteMembers , setIsClickOnNewProject} = useProjectContext();
     const { projects } = useProjectContext()
 
     const [tagInput, setTagInput] = useState('');
@@ -17,12 +17,12 @@ const CreateProjectModal = () => {
 
 
     const [formData, setFormData] = useState({
-        name: 'zoho work deive',
-        description: 'sdfsdfsdfsdfsdf',
+        name: 'zoho work drive coke',
+        description: 'is project me clone karna hay zoho work drive ko',
         status: 'active',
         tags: [],
         invitedMembers: [], // Dropdown se select kiye gaye log
-        members: ["deep.kksdk@gmail.com"]  // Naye emails jo type kiye gaye
+        members: [ 'deep.kksdk@gmail.com','backenddomination999@gmail.com']  // Naye emails jo type kiye gaye
     });
 
 

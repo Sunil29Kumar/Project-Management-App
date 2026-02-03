@@ -23,3 +23,5 @@ export const inviteMemberToProjectAuth = async (projectId, email) =>
 export const respondToInvitationAuth = async (token, status) =>
     await axios.post(`/projects/invitations/${token}/respond`, { status })
 
+export const inviteMultipleMembersToProjectAuth = async (projectId, email) =>
+    await axios.post(`/projects/${projectId}/invite`, { email })

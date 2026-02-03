@@ -4,22 +4,34 @@ import { useTaskContext } from '../../context/TaskContext';
 import { useProjectContext } from '../../context/ProjectContext';
 import { showToast } from "../../utils/toast.js";
 import { useTask } from '../../hooks/useTask.js';
+import { useParams } from 'react-router-dom';
+import { useUser } from '../../context/UserContext.jsx';
 
 const CreateTaskModal = () => {
     const { createTask } = useTask();
-    const { setIsClickOnNewTask, getAllTasks, loading } = useTaskContext();
+    const { setIsClickOnNewTask, getAllTasks, getTasksByProjectId, loading } = useTaskContext();
     const { projects } = useProjectContext();
+    const { user } = useUser()
+    const { projectId } = useParams()
+    console.log(projectId);
+
 
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        projectId: '',
+        projectId: projectId || '',
         priority: 'medium',
         status: 'todo',
         dueDate: new Date().toISOString().split('T')[0],
         assignedTo: '',
         assigneerRole: 'developer'
     });
+
+    useEffect(() => {
+        if (projectId) {
+            setFormData(prev => ({ ...prev, projectId: projectId }));
+        }
+    }, [projectId]);
 
 
     const handleSubmit = async (e) => {
@@ -30,8 +42,20 @@ const CreateTaskModal = () => {
             dueDate: formData.dueDate ? new Date(formData.dueDate) : undefined
         };
 
-        await createTask(dataToSend.projectId, dataToSend);
+        const res = await createTask(dataToSend.projectId, dataToSend);
+        console.log(res);
+        
+        if (res && res.success === true) {
+            await getTasksByProjectId(projectId);
+            setIsClickOnNewTask(false);
+        }
     }
+
+    // useEffect(() => {
+    //     getAllTasks()
+
+    // }, []);
+
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -93,10 +117,19 @@ const CreateTaskModal = () => {
                                 value={formData.projectId}
                                 onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}
                             >
-                                <option value="">Select Project</option>
-                                {projects?.map(project => (
-                                    <option key={project._id} value={project._id}>{project.name}</option>
-                                ))}
+                                {projectId ? (
+                                    <option value={projectId}>
+                                        {projects?.find(p => p._id === projectId)?.name || "Selected Project"}
+                                    </option>
+                                ) : (
+                                    <>
+                                        <option value="">Select Project</option>
+                                        {projects?.map(project => (
+                                            project.owner._id === user._id &&
+                                            <option key={project?._id} value={project?._id}>{project?.name}</option>
+                                        ))}
+                                    </>
+                                )}
                             </select>
                         </div>
 
@@ -177,9 +210,9 @@ const CreateTaskModal = () => {
                                 onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
                             >
                                 <option value="">Select Member</option>
-                                {projects?.find(p => p._id === formData.projectId)?.members?.map(member => (
+                                {projects?.find(p => p._id === (formData.projectId || projectId))?.members?.map(member => (
                                     <option key={member._id} value={member._id}>
-                                        {member.name} {member._id === projects.find(p => p._id === formData.projectId)?.owner?._id ? "(Owner)" : ""}
+                                        {member.name} {member._id === projects.find(p => p._id === (formData.projectId || projectId))?.owner?._id ? "(Owner)" : ""}
                                     </option>
                                 ))}
                             </select>

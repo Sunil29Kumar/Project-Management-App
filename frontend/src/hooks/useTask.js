@@ -15,7 +15,9 @@ export const useTask = () => {
             setIsClickOnNewTask(false);
             setIsClickOnCreateTask(false);
             await getAllTasks();
-
+            console.log(response);
+            
+            return response?.data;
         } catch (error) {
             showToast.error(error.response?.data?.error || "Failed to create task.");
             return { success: false };

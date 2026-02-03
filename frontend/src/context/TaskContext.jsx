@@ -22,7 +22,6 @@ export default function TaskProvider({ children }) {
     const getAllTasks = async () => {
         try {
             const response = await getAllProjectTasksAuth();
-            console.log("tasks = ", response);
             setAllProjectTasks(response?.data?.tasks);
         } catch (error) {
             showToast.error(error?.message || "Failed to fetch tasks.");
@@ -38,6 +37,7 @@ export default function TaskProvider({ children }) {
         try {
             const response = await getProjectTasksAuth(projectId);
             setProjectTasks(response?.data?.tasks);
+            getAllTasks();
         } catch (error) {
             showToast.error(error?.message || "Failed to fetch tasks for the project.");
         }

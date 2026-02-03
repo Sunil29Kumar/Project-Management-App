@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { CheckCircle2, XCircle, Loader2, Rocket, ShieldCheck } from 'lucide-react';
 import { useProject } from '../hooks/useProject';
 import { showToast } from '../utils/toast';
@@ -9,7 +9,6 @@ const InvitationResponse = () => {
     const [status, setStatus] = useState('pending'); // 'pending', 'success', 'failed'
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-
     const token = searchParams.get('token');
 
     const handleSubmit = async (decision) => {
@@ -20,14 +19,19 @@ const InvitationResponse = () => {
 
         // decision will be either 'accepted' or 'rejected'
         const data = await respondToInvitation(token, decision);
+        console.log(data);
+        
 
-        if (data && data.success) {
+        if (data && data.success && data.projectId) {
             setStatus('success');
             setTimeout(() => {
-                navigate('/dashboard');
+                navigate(`/projects/${data.projectId}/board`);
             }, 3000);
         } else {
             setStatus('failed');
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 3000);
         }
     }
 
@@ -47,7 +51,7 @@ const InvitationResponse = () => {
                     Project Invitation
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 mb-8">
-                    You have been invited to collaborate on a project. 
+                    You have been invited to collaborate on a project.
                     What would you like to do?
                 </p>
 
@@ -72,9 +76,8 @@ const InvitationResponse = () => {
                         </button>
                     </div>
                 ) : (
-                    <div className={`p-4 rounded-xl flex items-center justify-center gap-3 font-bold ${
-                        status === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                    }`}>
+                    <div className={`p-4 rounded-xl flex items-center justify-center gap-3 font-bold ${status === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                        }`}>
                         {status === 'success' ? <ShieldCheck /> : <XCircle />}
                         {status === 'success' ? 'Invitation processed! Redirecting...' : 'Action failed. Please try again.'}
                     </div>
