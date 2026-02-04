@@ -5,13 +5,13 @@ import { useProjectContext } from '../../context/ProjectContext';
 import { showToast } from "../../utils/toast.js";
 import { useTask } from '../../hooks/useTask.js';
 import { useParams } from 'react-router-dom';
-import { useUser } from '../../context/UserContext.jsx';
+import { useUserContext } from '../../context/UserContext.jsx';
 
 const CreateTaskModal = () => {
     const { createTask } = useTask();
     const { setIsClickOnNewTask, getAllTasks, getTasksByProjectId, loading } = useTaskContext();
     const { projects } = useProjectContext();
-    const { user } = useUser()
+    const { user } = useUserContext()
     const { projectId } = useParams()
     console.log(projectId);
 

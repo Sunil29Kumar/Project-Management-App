@@ -7,13 +7,13 @@ import { useTask } from '../hooks/useTask';
 import { showToast } from '../utils/toast';
 // Icons ke liye (npm install lucide-react)
 import { Plus, MoreHorizontal, Calendar, Clock, Layout, AlignLeft, ShieldCheck } from 'lucide-react';
-import { useUser } from '../context/UserContext';
+import {  useUserContext } from '../context/UserContext';
 
 const KanbanBoard = () => {
     const { projects } = useProjectContext();
     const { setIsClickOnNewTask, projectTasks, getTasksByProjectId, getAllTasks } = useTaskContext();
     const { updateTask } = useTask()
-    const { user } = useUser()
+    const { user } = useUserContext()
     const { projectId } = useParams();
 
     const [assignedTasks, setAssignedTasks] = useState();

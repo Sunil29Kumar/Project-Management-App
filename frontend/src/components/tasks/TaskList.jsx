@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MoreVertical, Calendar as CalendarIcon, CheckCircle2, Circle, Clock, Edit3, Trash2, Shield, ClipboardList, Plus } from 'lucide-react';
 import { useTaskContext } from '../../context/TaskContext';
-import { useUser } from '../../context/UserContext';
+import {  useUserContext } from '../../context/UserContext';
 import { showToast } from '../../utils/toast.js';
 import { useTask } from '../../hooks/useTask.js';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ const TaskList = ({ filteredTasks }) => {
     const [openMenuId, setOpenMenuId] = useState(null);
     const { handleTaskEditClick, deleteTask } = useTask();
     const { setIsClickOnUpdateTask, setIsClickOnNewTask, getAllTasks } = useTaskContext();
-    const { user } = useUser()
+    const { user } = useUserContext()
 
     const navigate = useNavigate()
 

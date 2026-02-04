@@ -8,6 +8,7 @@ import userRouter from "./routes/user.route.js";
 import projectRouter from "./routes/project.route.js";
 import cookieParser from 'cookie-parser';
 
+
 loadEnvFile('.env');
 connectDB();
 
@@ -15,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 app.use(cookieParser(process.env.SECRET_KEY));
-app.use(express.json());
+
 
 app.use(
   cors({
@@ -23,6 +24,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(express.json());
 
 
 app.get("/", (req, res) => {

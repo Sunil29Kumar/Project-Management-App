@@ -5,8 +5,10 @@ import App from './App.jsx'
 import { AppProvider } from './context/AppProvider.jsx'
 import { Toaster } from 'sonner';
 
+// 1. UploadThing ki CSS zaroor import karein
+import "@uploadthing/react/styles.css";
+
 createRoot(document.getElementById('root')).render(
-  // <StrictMode>
     <AppProvider>
       <App />
       <Toaster
@@ -16,7 +18,5 @@ createRoot(document.getElementById('root')).render(
         expand={false}
         offset={{ top: "25px", right: "20px" }}
       />
-      <Toaster id="error" position='top-right' richColors />
     </AppProvider>
-  // </StrictMode>,
 )

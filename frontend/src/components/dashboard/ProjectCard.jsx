@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Calendar, MoreVertical, ArrowRight, Pencil, Trash2, Star, Share2, UserPlus } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useProject } from '../../hooks/useProject.js';
-import { useUser } from '../../context/UserContext.jsx';
+import {  useUserContext } from '../../context/UserContext.jsx';
 import { useProjectContext } from '../../context/ProjectContext.jsx';
 
 
@@ -10,7 +10,7 @@ const ProjectCard = ({ project, getTasksByProjectId }) => {
 
   const { setInviteMembers } = useProjectContext();
   const { setIsClickOnUpdateProject, handleEditClick, deleteProject } = useProject();
-  const { user } = useUser()
+  const { user } = useUserContext()
   const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
 
