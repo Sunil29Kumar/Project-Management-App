@@ -1,4 +1,3 @@
-import { loadEnvFile } from 'node:process';
 import express from "express";
 import { connectDB } from "./database/db.js";
 import cors from "cors";
@@ -9,7 +8,6 @@ import projectRouter from "./routes/project.route.js";
 import cookieParser from 'cookie-parser';
 
 
-loadEnvFile('.env');
 connectDB();
 
 const PORT = process.env.PORT || 5000;
