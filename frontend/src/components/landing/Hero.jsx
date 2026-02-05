@@ -28,7 +28,7 @@ const Hero = () => {
         {/* Mockup Image Placeholder */}
         <div className="mt-16 relative max-w-5xl mx-auto border-8 border-slate-100 rounded-3xl shadow-2xl">
            <div className="bg-slate-200 aspect-video rounded-2xl flex items-center justify-center text-slate-400">
-              [Application Dashboard Screenshot]
+              <img src="./task-board-banner.png" alt="Application Dashboard Screenshot" className=" w-full h-full object-contain " />
            </div>
         </div>
       </div>
