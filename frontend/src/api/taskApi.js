@@ -17,3 +17,11 @@ export const updateTaskAuth = async (taskId, title, description, status, assigne
 
 export const deleteTaskAuth = async (taskId) =>
     await axios.delete(`/projects/tasks/${taskId}`)
+
+
+export const addCommentToTaskAuth = async (taskId, comment) =>
+    await axios.post(`/projects/tasks/${taskId}/comments`, { comment })
+
+
+export const getCommentsForTaskAuth = async (taskId) =>
+    await axios.get(`/projects/tasks/${taskId}/comments`)

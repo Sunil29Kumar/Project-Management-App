@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import {  getAllProjectTasksAuth, getProjectTasksAuth } from "../api/taskApi.js";
+import { getAllProjectTasksAuth, getCommentsForTaskAuth, getProjectTasksAuth } from "../api/taskApi.js";
 import { showToast } from "../utils/toast.js";
 
 
@@ -11,9 +11,12 @@ export default function TaskProvider({ children }) {
     const [allProjectTasks, setAllProjectTasks] = useState()
     const [projectTasks, setProjectTasks] = useState([]);
 
+    const [commentsForTask, setCommentsForTask] = useState([]);
+
     const [isClickOnNewTask, setIsClickOnNewTask] = useState(false);
     const [isClickOnCreateTask, setIsClickOnCreateTask] = useState(false);
     const [isClickOnUpdateTask, setIsClickOnUpdateTask] = useState(false);
+
 
     const [selectedTask, setSelectedTask] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -42,7 +45,23 @@ export default function TaskProvider({ children }) {
             showToast.error(error?.message || "Failed to fetch tasks for the project.");
         }
     }
-    
+
+
+    const getCommentsForTask = async (taskId) => {
+        setLoading(true);
+        try {
+            const response = await getCommentsForTaskAuth(taskId);
+            setCommentsForTask(response?.data?.comments || []);
+            return response?.data?.comments || [];
+        } catch (error) {
+            showToast.error(error?.message || "Failed to fetch comments for the task.");
+            return [];
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
 
     return <TaskContext.Provider value={{
         allProjectTasks, getAllTasks,
@@ -51,7 +70,8 @@ export default function TaskProvider({ children }) {
         isClickOnCreateTask, setIsClickOnCreateTask,
         isClickOnUpdateTask, setIsClickOnUpdateTask,
         selectedTask, setSelectedTask,
-        loading, setLoading
+        loading, setLoading,
+        commentsForTask, getCommentsForTask
     }}>
         {children}
     </TaskContext.Provider>

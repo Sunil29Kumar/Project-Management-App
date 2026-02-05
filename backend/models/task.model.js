@@ -45,6 +45,10 @@ const taskSchema = new Schema({
     dueDate: {
         type: Date,
         default: null
+    },
+    commentsCount: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 

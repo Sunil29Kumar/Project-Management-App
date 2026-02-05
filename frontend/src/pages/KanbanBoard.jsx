@@ -6,17 +6,20 @@ import { useTaskContext } from '../context/TaskContext';
 import { useTask } from '../hooks/useTask';
 import { showToast } from '../utils/toast';
 // Icons ke liye (npm install lucide-react)
-import { Plus, MoreHorizontal, Calendar, Clock, Layout, AlignLeft, ShieldCheck } from 'lucide-react';
-import {  useUserContext } from '../context/UserContext';
+import { Plus, MoreHorizontal, Calendar, Clock, Layout, AlignLeft, ShieldCheck, MessageSquareMore } from 'lucide-react';
+import { useUserContext } from '../context/UserContext';
 
 const KanbanBoard = () => {
     const { projects } = useProjectContext();
-    const { setIsClickOnNewTask, projectTasks, getTasksByProjectId, getAllTasks } = useTaskContext();
-    const { updateTask } = useTask()
+
+    const { setIsClickOnNewTask, projectTasks, getTasksByProjectId, getAllTasks, commentsForTask, getCommentsForTask } = useTaskContext();
+    const [activeTaskId, setActiveTaskId] = useState(null);
+    const { updateTask, addCommentToTask } = useTask()
     const { user } = useUserContext()
     const { projectId } = useParams();
 
     const [assignedTasks, setAssignedTasks] = useState();
+    const [commentText, setCommentText] = useState("");
 
     const [columns, setColumns] = useState({
         "todo": { name: 'To Do', items: [], color: 'bg-slate-400' },
@@ -35,6 +38,18 @@ const KanbanBoard = () => {
     // check project owner
     const isProjectOwner = selectedProject?.owner?._id === user?._id;
 
+    const handleCommentChange = async (e) => {
+        console.log(activeTaskId);
+
+        await addCommentToTask(activeTaskId, commentText);
+        setCommentText("");
+    }
+
+    useEffect(() => {
+        if (activeTaskId) {
+            getCommentsForTask(activeTaskId);
+        }
+    }, [commentsForTask])
 
     // Populate columns when projectTasks change
     useEffect(() => {
@@ -110,9 +125,10 @@ const KanbanBoard = () => {
     };
 
     return (
-        <div className="flex flex-col  h-[85vh] bg-[#F8FAFC] dark:bg-[#0B0F1A] overflow-hidden">
+        <div
+            className="flex flex-col  h-[85vh] bg-[#F8FAFC] dark:bg-[#0B0F1A] overflow-hidden">
             {/* --- Header Section --- */}
-            <header className="w-full flex flex-col md:flex-row justify-between items-start md:items-center px-8 py-6 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shadow-sm z-20 gap-6">
+            <header className="w-full flex  md:flex-row justify-between items-start md:items-center px-8 py-6 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shadow-sm z-20 gap-6">
                 {/* Left Side: Brand & Project Info */}
                 <div className="flex items-start gap-4">
                     <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none">
@@ -241,59 +257,143 @@ const KanbanBoard = () => {
                                             {column.items.map((item, index) => (
                                                 <Draggable key={item._id} draggableId={item._id} index={index}>
                                                     {(provided, snapshot) => (
-                                                        <div
-                                                            ref={provided.innerRef}
-                                                            {...provided.draggableProps}
-                                                            {...provided.dragHandleProps}
-                                                            className={`bg-white dark:bg-[#161B26] p-4 rounded-xl border border-slate-200 dark:border-slate-800/60 shadow-sm transition-all hover:border-indigo-500/50 hover:shadow-md ${snapshot.isDragging ? 'rotate-[2deg] shadow-2xl ring-2 ring-indigo-500/50 z-50' : ''
-                                                                }`}
-                                                        >
-                                                            {/* Priority Badge */}
-                                                            <div className="flex justify-between items-start mb-3">
-                                                                <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold uppercase tracking-wider ${item.priority === 'critical' || item.priority === 'high'
-                                                                    ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400'
-                                                                    : 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400'
-                                                                    }`}>
-                                                                    {item.priority}
-                                                                </span>
-                                                                <button className="text-slate-300 hover:text-slate-500 transition-colors">
-                                                                    <MoreHorizontal className="w-4 h-4" />
-                                                                </button>
-                                                            </div>
+                                                        <>
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                className={`bg-white dark:bg-[#161B26] p-4 rounded-xl border border-slate-200 dark:border-slate-800/60 shadow-sm transition-all hover:border-indigo-500/50 hover:shadow-md ${snapshot.isDragging ? 'rotate-2 shadow-2xl ring-2 ring-indigo-500/50 z-50' : ''
+                                                                    }`}
+                                                            >
+                                                                {/* Priority Badge */}
+                                                                <div className="flex justify-between items-start mb-3">
+                                                                    <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold uppercase tracking-wider ${item.priority === 'critical' || item.priority === 'high'
+                                                                        ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400'
+                                                                        : 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400'
+                                                                        }`}>
+                                                                        {item.priority}
+                                                                    </span>
+                                                                    <button className=" text-slate-300 hover:text-slate-500 transition-colors">
+                                                                        <MoreHorizontal className="w-4 h-4 cursor-pointer " />
 
-                                                            <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2 leading-tight">
-                                                                {item.title}
-                                                            </h4>
-
-                                                            {item.description && (
-                                                                <div className="flex items-center gap-1 text-slate-400 mb-4">
-                                                                    <AlignLeft className="w-3 h-3" />
-                                                                    <p className="text-[11px] truncate">{item.description}</p>
+                                                                    </button>
                                                                 </div>
-                                                            )}
 
-                                                            <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-50 dark:border-slate-800">
-                                                                <div className="flex items-center gap-3 text-slate-400">
-                                                                    <div className="flex items-center gap-1">
-                                                                        <Calendar className="w-3 h-3" />
-                                                                        <span className="text-[10px] font-medium">
-                                                                            {item.dueDate ? new Date(item.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No date'}
-                                                                        </span>
+                                                                <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2 leading-tight">
+                                                                    {item.title}
+                                                                </h4>
+
+                                                                {item.description && (
+                                                                    <div className="flex items-center gap-1 text-slate-400 mb-4">
+                                                                        <AlignLeft className="w-3 h-3" />
+                                                                        <p className="text-[11px] truncate">{item.description}</p>
+                                                                    </div>
+                                                                )}
+
+                                                                <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-50 dark:border-slate-800">
+                                                                    <div className="flex items-center gap-3 text-slate-400">
+                                                                        <div className="flex items-center gap-1">
+                                                                            <Calendar className="w-3 h-3" />
+                                                                            <span className="text-[10px] font-medium">
+                                                                                {item.dueDate ? new Date(item.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No date'}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Assignee Avatar */}
+                                                                    <div
+                                                                        title={item.assignedTo?.name}
+                                                                        className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-[10px] text-white font-bold border-2 border-white dark:border-slate-800 shadow-sm"
+                                                                    >
+                                                                        {item.assignedTo?.name?.charAt(0).toUpperCase() || 'U'}
                                                                     </div>
                                                                 </div>
 
-                                                                {/* Assignee Avatar */}
-                                                                <div
-                                                                    title={item.assignedTo?.name}
-                                                                    className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-[10px] text-white font-bold border-2 border-white dark:border-slate-800 shadow-sm"
-                                                                >
-                                                                    {item.assignedTo?.name?.charAt(0).toUpperCase() || 'U'}
-                                                                </div>
                                                             </div>
-                                                        </div>
+                                                            {/* comment section */}
+                                                            <div className='w-full mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/50'>
+                                                                {activeTaskId !== item._id ? (
+                                                                    <div
+                                                                        onClick={() => {
+                                                                            getCommentsForTask(item._id);
+                                                                            setActiveTaskId(item._id)
+                                                                        }}
+                                                                        className="flex items-center gap-2 text-slate-400 hover:text-indigo-600 transition-all cursor-pointer group"
+                                                                    >
+                                                                        <div className="p-1.5 rounded-lg group-hover:bg-indigo-50 dark:group-hover:bg-indigo-500/10 transition-colors">
+                                                                            <MessageSquareMore size={16} />
+                                                                        </div>
+                                                                        <span className="text-[11px] font-bold tracking-tight">
+                                                                            {item.commentsCount || 0} Comments
+                                                                        </span>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className='space-y-3 animate-in fade-in slide-in-from-top-2 duration-200'>
+                                                                        {/* Input Box Area */}
+                                                                        <div className='bg-slate-50 dark:bg-slate-900/40 p-2 rounded-xl border border-slate-200 dark:border-slate-800'>
+                                                                            <textarea
+                                                                                autoFocus
+                                                                                placeholder='Write a response...'
+                                                                                className='w-full bg-white dark:bg-slate-800 p-2.5 rounded-lg text-[12px] border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all resize-none min-h-[60px]'
+                                                                                value={commentText}
+                                                                                onChange={(e) => setCommentText(e.target.value)}
+                                                                            />
+                                                                            <div className="flex justify-end gap-2 mt-2">
+                                                                                <button
+                                                                                    onClick={() => setActiveTaskId(null)}
+                                                                                    className='px-3 py-1.5 text-[11px] font-semibold text-slate-500 hover:text-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-md transition-all'
+                                                                                >
+                                                                                    Cancel
+                                                                                </button>
+                                                                                <button
+                                                                                    onClick={handleCommentChange}
+                                                                                    disabled={!commentText.trim()}
+                                                                                    className='px-4 py-1.5 text-[11px] bg-indigo-600 text-white rounded-md font-bold hover:bg-indigo-700 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all'
+                                                                                >
+                                                                                    Reply
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {/* Comments List Area */}
+                                                                        <div className='max-h-[180px] overflow-y-auto pr-1 space-y-3 custom-scrollbar'>
+                                                                            {commentsForTask.length > 0 ? (
+                                                                                commentsForTask.map(comment => (
+                                                                                    <div key={comment._id} className="flex gap-2 group items-start">
+                                                                                        {/* User Avatar Initial */}
+                                                                                        <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-slate-600 dark:text-slate-300 shadow-sm border border-white dark:border-slate-800">
+                                                                                            {comment.userId?.name?.charAt(0).toUpperCase() || 'U'}
+                                                                                        </div>
+
+                                                                                        <div className="flex-1 bg-white dark:bg-slate-800/50 p-2.5 rounded-2xl rounded-tl-none border border-slate-100 dark:border-slate-700/50 shadow-sm">
+                                                                                            <div className="flex justify-between items-center mb-1">
+                                                                                                <span className="text-[10px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-tighter">
+                                                                                                    {comment.userId?.name || 'Anonymous'}
+                                                                                                </span>
+                                                                                                <span className="text-[9px] font-medium text-slate-400">
+                                                                                                    {new Date(comment.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                                                                                </span>
+                                                                                            </div>
+                                                                                            <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                                                                                                {comment.text}
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                ))
+                                                                            ) : (
+                                                                                <p className="text-[10px] text-center text-slate-400 font-medium py-2 italic">No comments yet. Start the conversation!</p>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </>
+
                                                     )}
+
                                                 </Draggable>
                                             ))}
+
                                             {provided.placeholder}
 
                                             {/* Quick Add Button at bottom of column */}

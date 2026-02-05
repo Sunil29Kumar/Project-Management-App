@@ -17,7 +17,7 @@ const Tasks = () => {
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex  md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Tasks</h1>
                     <p className="text-slate-500">Manage and track your personal and team responsibilities.</p>
@@ -32,9 +32,9 @@ const Tasks = () => {
             <TaskStats />
 
             {/* Filters & Search */}
-            <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-                <div className="relative w-full md:w-96 group">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500" size={18} />
+            <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex  md:flex-row items-center justify-between gap-4 shadow-sm">
+                <div className="relative flex justify-between items-center w-full md:w-96 group">
+                    <Search className="absolute left-3   text-slate-400 group-focus-within:text-indigo-500" size={18} />
                     <input
                         type="text"
                         placeholder="Search tasks..."

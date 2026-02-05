@@ -17,7 +17,7 @@ const Dashboard = () => {
     <div className="space-y-5 animate-in fade-in duration-500">
 
       {/* 1. Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex  md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard</h1>
           <p className="text-slate-500">Welcome back! Monitoring your workspaces and team activity.</p>

@@ -4,6 +4,8 @@ import Project from "../models/project.model.js";
 import Task from "../models/task.model.js";
 import Invitation from "../models/invitation.model.js";
 import { sendInvitationEmail } from "../mail/projectInviation.js";
+import Log from "../models/log.model.js";
+import Comment from "../models/comment.model.js";
 
 export const createProject = async (req, res) => {
 
@@ -424,6 +426,16 @@ export const updateTaskById = async (req, res) => {
             }
         }
 
+
+        // update log
+        await Log.create({
+            projectId: task.projectId,
+            taskId: task._id,
+            performedBy: userId,
+            action: 'STATUS_CHANGE',
+            details: { from: task.status, to: updateData.status || task.status }
+        })
+
         // Update Task
         const updatedTask = await Task.findByIdAndUpdate(taskId, { $set: updateData }, { new: true });
 
@@ -471,6 +483,100 @@ export const deleteTaskById = async (req, res) => {
         });
     }
 
+}
+
+
+// Add comment to task
+export const addCommentToTask = async (req, res) => {
+    try {
+        const { taskId } = req.params;
+        const { comment } = req.body;
+        const userId = req.user._id;
+
+
+        console.log(taskId);
+        console.log(comment);
+
+        // Check if task exists
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ success: false, error: "Task not found" });
+        }
+
+        // Check if user is member of the project
+        const project = await Project.findById(task.projectId);
+        const isMember = project.members.some(memberId => memberId.toString() === userId.toString());
+        if (!isMember) {
+            return res.status(403).json({
+                success: false,
+                error: "Access Denied: You are not a member of this project"
+            });
+        }
+
+        // Create Comment
+        const newComment = await Comment.create({
+            taskId,
+            userId,
+            text: comment
+        });
+
+        // update log        
+        await Log.create({
+            projectId: task.projectId,
+            taskId: task._id,
+            performedBy: userId,
+            action: 'COMMENT_ADDED',
+            details: { message: `A comment was added to the task: "${comment}"` }
+        })
+
+        // Increment comments count in Task
+        task.commentsCount += 1;
+        await task.save();
+
+        return res.status(201).json({ success: true, message: "Comment added successfully", comment });
+
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: `Server error while adding comment to task: ${error?.message}`
+        });
+    }
+}
+
+
+
+export const getCommentsForTask = async (req, res) => {
+    try {
+        const { taskId } = req.params;
+        const userId = req.user._id;
+        // Check if task exists        
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ success: false, error: "Task not found" });
+        }
+        // Check if user is member of the project
+        const project = await Project.findById(task.projectId);
+        const isMember = project.members.some(memberId => memberId.toString() === userId.toString());
+        if (!isMember) {
+            return res.status(403).json({
+                success: false,
+                error: "Access Denied: You are not a member of this project"
+            });
+        }
+
+        const comments = await Comment.find({ taskId })
+            .populate("userId", "name email")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({ success: true, comments });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: `Server error while fetching comments for task: ${error?.message}`
+        });
+    }
 }
 
 

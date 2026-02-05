@@ -5,8 +5,6 @@ import App from './App.jsx'
 import { AppProvider } from './context/AppProvider.jsx'
 import { Toaster } from 'sonner';
 
-// 1. UploadThing ki CSS zaroor import karein
-import "@uploadthing/react/styles.css";
 
 createRoot(document.getElementById('root')).render(
     <AppProvider>

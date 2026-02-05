@@ -27,7 +27,7 @@ const Projects = () => {
     <div className="space-y-8 p-2">
       <ProjectHeader />
 
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex  md:flex-row md:items-center justify-between gap-4 shadow-sm">
         <ProjectFilters activeFilter={filter} setFilter={setFilter} />
 
         <div className="text-sm text-slate-500 font-medium">

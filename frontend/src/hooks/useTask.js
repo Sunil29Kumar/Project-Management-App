@@ -1,4 +1,4 @@
-import { createTaskAuth, deleteTaskAuth, updateTaskAuth } from "../api/taskApi.js";
+import { addCommentToTaskAuth, createTaskAuth, deleteTaskAuth, updateTaskAuth } from "../api/taskApi.js";
 import { useTaskContext } from "../context/TaskContext";
 import { showToast } from "../utils/toast.js";
 
@@ -16,7 +16,7 @@ export const useTask = () => {
             setIsClickOnCreateTask(false);
             await getAllTasks();
             console.log(response);
-            
+
             return response?.data;
         } catch (error) {
             showToast.error(error.response?.data?.error || "Failed to create task.");
@@ -65,5 +65,22 @@ export const useTask = () => {
         }
     }
 
-    return { createTask, handleTaskEditClick, updateTask, deleteTask };
+
+    const addCommentToTask = async (taskId, comment) => {
+        setLoading(true);
+        try {
+            const response = await addCommentToTaskAuth(taskId, comment);
+            showToast.success(response.message || "Comment added successfully.", "success");
+            await getAllTasks();
+            return response?.data;
+        } catch (error) {
+            
+            showToast.error(error.response?.data?.error || "Failed to add comment.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
+    return { createTask, handleTaskEditClick, updateTask, deleteTask, addCommentToTask };
 }

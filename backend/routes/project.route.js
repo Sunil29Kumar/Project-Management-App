@@ -1,6 +1,6 @@
 
 import express, { Router } from "express";
-import { createProject, createTask, deleteProjectById, deleteTaskById, getAllProjects, getAllProjectTasks, getTasks, inviteMemberToProject, respondToInvitation, updateProjectById, updateTaskById } from "../controllers/project.controller.js";
+import { addCommentToTask, createProject, createTask, deleteProjectById, deleteTaskById, getAllProjects, getAllProjectTasks, getCommentsForTask, getTasks, inviteMemberToProject, respondToInvitation, updateProjectById, updateTaskById } from "../controllers/project.controller.js";
 import checkAuth from "../middlewares/authMiddleware.js";
 import { validate } from "../middlewares/validateInputs.js";
 import { projectValidations } from "../validators/projectSchema.js";
@@ -50,6 +50,14 @@ router.put("/tasks/:taskId", checkAuth, validate(updateTaskValidations), updateT
 
 // Delete Task by Id
 router.delete("/tasks/:taskId", checkAuth, deleteTaskById)
+
+
+// Add comment to task 
+router.post("/tasks/:taskId/comments", checkAuth, addCommentToTask)
+
+// Get all comments for a task
+router.get("/tasks/:taskId/comments", checkAuth, getCommentsForTask)
+
 
 // ===========================================
 
