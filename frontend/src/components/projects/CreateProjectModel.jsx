@@ -17,12 +17,12 @@ const CreateProjectModal = () => {
 
 
     const [formData, setFormData] = useState({
-        name: 'zoho work drive coke',
-        description: 'is project me clone karna hay zoho work drive ko',
+        name: '',
+        description: '',
         status: 'active',
         tags: [],
         invitedMembers: [], // Dropdown se select kiye gaye log
-        members: [ 'deep.kksdk@gmail.com','backenddomination999@gmail.com']  // Naye emails jo type kiye gaye
+        members: [ '']  // Naye emails jo type kiye gaye
     });
 
 
