@@ -38,13 +38,10 @@ export const login = async (req, res) => {
             return res.status(400).json({ success: false, error: "Invalid password" });
         }
 
-    
-
-
 
         // set session 
         const sessionId = crypto.randomUUID()
-        const sessionExpiry = Date.now() + 1000 * 60 * 60 * 24 * 7;
+        const sessionExpiry = 1000 * 60 * 60 * 24 * 7;
 
         res.cookie("sid", sessionId, {
             httpOnly: true,
