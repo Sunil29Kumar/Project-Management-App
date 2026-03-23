@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MoreVertical, Calendar as CalendarIcon, CheckCircle2, Circle, Clock, Edit3, Trash2, Shield, ClipboardList, Plus } from 'lucide-react';
 import { useTaskContext } from '../../context/TaskContext';
-import {  useUserContext } from '../../context/UserContext';
+import { useUserContext } from '../../context/UserContext';
 import { showToast } from '../../utils/toast.js';
 import { useTask } from '../../hooks/useTask.js';
 import { useNavigate } from 'react-router-dom';
@@ -99,11 +99,13 @@ const TaskList = ({ filteredTasks }) => {
                                         {/* Assignee with Role Badge */}
                                         <td className="px-6 py-5">
                                             <div className="flex items-center gap-3">
-                                                <img
-                                                    src={`https://api.dicebear.com/7.x/initials/svg?seed=${task.assignedTo?.name || 'User'}`}
-                                                    className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-700 shadow-sm"
-                                                    alt="avatar"
-                                                />
+
+                                                <div
+                                                    className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-[10px] text-white font-bold border-2 border-white dark:border-slate-800 shadow-sm"
+                                                >
+                                                    <h1>{task.assignedTo?.name?.slice(0, 1)}</h1>
+
+                                                </div>
                                                 <div className="flex flex-col">
                                                     <span className="text-[13px] font-semibold text-slate-700 dark:text-slate-200 leading-none">
                                                         {task.assignedTo?.name || 'Unassigned'}
@@ -132,7 +134,7 @@ const TaskList = ({ filteredTasks }) => {
 
                                         {/* Action Button */}
                                         <td
-                                            onClick={(e)=> e.stopPropagation() }
+                                            onClick={(e) => e.stopPropagation()}
                                             className="px-6 py-5 z-10 text-right relative">
 
                                             {showActionButtons && (

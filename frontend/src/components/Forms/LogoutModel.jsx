@@ -42,7 +42,7 @@ const Logout = ({ setIsClickOnLogout }) => {
                     Oh no! Leaving so soon?
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 mb-8">
-                    Are you sure you want to log out of your DevSync account?
+                    Are you sure you want to log out of your Karyam account?
                 </p>
 
                 {/* Action Buttons */}

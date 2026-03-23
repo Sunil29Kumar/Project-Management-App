@@ -14,7 +14,7 @@ const Hero = () => {
           </span>
         </h1>
         <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-500 mb-10">
-          DevSync brings your team's code and tasks together. Built by developers, for developers who value speed and clean workflows.
+          Karyam brings your team's code and tasks together. Built by developers, for developers who value speed and clean workflows.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link to={"/register"} className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:-translate-y-1 transition duration-300">

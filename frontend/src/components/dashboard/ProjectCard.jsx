@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Calendar, MoreVertical, ArrowRight, Pencil, Trash2, Star, Share2, UserPlus } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useProject } from '../../hooks/useProject.js';
-import {  useUserContext } from '../../context/UserContext.jsx';
+import { useUserContext } from '../../context/UserContext.jsx';
 import { useProjectContext } from '../../context/ProjectContext.jsx';
 
 
@@ -15,7 +15,9 @@ const ProjectCard = ({ project, getTasksByProjectId }) => {
   const location = useLocation();
 
   const isProjectOwner = project.owner?._id === user?._id;
-  console.log(isProjectOwner);
+
+  console.log(project);
+
 
 
   // --- Smart Date Formatter ---
@@ -55,6 +57,7 @@ const ProjectCard = ({ project, getTasksByProjectId }) => {
           </div>
         </div>
 
+        {/* Action Button (only on /projects and if user is owner) */}
         {location.pathname === '/projects' && isProjectOwner && (
           <div className="relative">
             <button
@@ -106,18 +109,23 @@ const ProjectCard = ({ project, getTasksByProjectId }) => {
 
       {/* Bottom Section */}
       <div className="flex items-center justify-between pt-5 border-t border-slate-50 dark:border-slate-800 mt-auto">
+
+        {/* total members in project  */}
         <div className="flex -space-x-2.5">
-          {[1, 2, 3].map((m) => (
-            <img
-              key={m}
-              src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${m + project.name}`}
-              className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-900 bg-slate-100 shadow-sm"
-              alt="team"
-            />
+          {project.members.slice(0, 5).map(({ name }) => (
+            <div
+              className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-[15px] text-white font-bold border-2 border-white dark:border-slate-800 shadow-sm">
+              <h1>
+                {name?.slice(0, 1)}</h1>
+            </div>
           ))}
-          <div className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-900 bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shadow-sm">
-            {`+${project.members.length - 3}`}
-          </div>
+
+          {project.members.length > 5 && (
+            <div className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-900 bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-[10px] font-bold text-indigo-600 dark:text-indigo-400 shadow-sm">
+              {`+${project.members.length - 5}`}
+            </div>
+          )}
+
         </div>
 
         <Link to={`/projects/${project._id}/board`}
@@ -132,7 +140,7 @@ const ProjectCard = ({ project, getTasksByProjectId }) => {
 
       {/* Admin Badge */}
       <div className="absolute top-0 right-12 transform -translate-y-1/2">
-        <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full shadow-md bg-indigo-600 text-white' `}>
+        <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full shadow-md bg-indigo-100 text-black' `}>
           {isProjectOwner ? 'Admin' : project.role || 'Member'}
         </span>
       </div>

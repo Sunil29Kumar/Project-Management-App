@@ -3,8 +3,8 @@ import { Plus, Minus } from 'lucide-react'; // Icons use karein
 
 const faqs = [
   {
-    question: "Is DevSync free to use?",
-    answer: "Yes! DevSync offers a Hobby plan that is free forever for individual developers. For teams requiring advanced features, we will soon launch our Pro plan."
+    question: "Is Karyam free to use?",
+    answer: "Yes! Karyam offers a Hobby plan that is free forever for individual developers. For teams requiring advanced features, we will soon launch our Pro plan."
   },
   {
     question: "How secure is my project data?",
@@ -12,10 +12,10 @@ const faqs = [
   },
   {
     question: "Can I collaborate with my team in real-time?",
-    answer: "Absolutely! DevSync is built for collaboration. You can invite team members to your projects and see updates as they happen."
+    answer: "Absolutely! Karyam is built for collaboration. You can invite team members to your projects and see updates as they happen."
   },
   {
-    question: "Does DevSync support partial updates?",
+    question: "Does Karyam support partial updates?",
     answer: "Yes, our backend is optimized for partial updates. Only the fields you change are updated, making the app lightning-fast and efficient."
   },
   {
@@ -35,7 +35,7 @@ const FAQ = () => {
       <div className="max-w-3xl mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-slate-900 mb-4">Got Questions?</h2>
-          <p className="text-slate-500 text-lg">Everything you need to know about DevSync.</p>
+          <p className="text-slate-500 text-lg">Everything you need to know about Karyam.</p>
         </div>
 
         <div className="space-y-4">

@@ -39,7 +39,7 @@ const RegisterForm = () => {
         <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
             <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-xl shadow-slate-200 border border-slate-100">
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-slate-900">Join DevSync</h2>
+                    <h2 className="text-3xl font-bold text-slate-900">Join Karyam</h2>
                     <p className="text-slate-500 mt-2">Start managing your projects like a pro.</p>
                 </div>
 

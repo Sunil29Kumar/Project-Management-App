@@ -34,7 +34,7 @@ const Sidebar = () => {
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-blue-600 rounded-lg shrink-0"></div>
           {!isMinimized && (
-            <span className="text-2xl font-bold text-blue-600 truncate">DevSync</span>
+            <span className="text-2xl font-bold text-blue-600 truncate">Karyam</span>
           )}
         </div>
       </div>

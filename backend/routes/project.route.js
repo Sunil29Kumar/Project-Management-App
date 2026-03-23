@@ -61,4 +61,46 @@ router.get("/tasks/:taskId/comments", checkAuth, getCommentsForTask)
 
 // ===========================================
 
+
+
+// ================= ISSUE ===================
+
+// (Issue related routes will go here in the future, currently handled in issue.route.js)
+
+// Create Issue for a task
+router.post("/tasks/:taskId/issues", checkAuth, createIssue)
+
+// Get all issues for a task
+router.get("/tasks/:taskId/issues", checkAuth, getIssuesForTask)
+
+// get issue by id
+router.get("/issues/:issueId", checkAuth, getIssueById)
+
+
+// ============================================
+
+
+
+
+// ================= BUGS ===================
+
+
+// cretae bug for a task 
+router.post("/tasks/:taskId/bugs", checkAuth, createBug)
+
+// get all bugs for a task
+router.get("/tasks/:taskId/bugs", checkAuth, getBugsForTask)
+
+// get bug by id
+router.get("/bugs/:bugId", checkAuth, getBugById)
+
+
+
+// ===========================================
+
+
+
+
+
+
 export default router;

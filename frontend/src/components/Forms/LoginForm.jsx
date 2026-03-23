@@ -51,7 +51,7 @@ const LoginForm = () => {
             <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-xl shadow-slate-200 border border-slate-100">
                 <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold text-slate-900">Welcome Back</h2>
-                    <p className="text-slate-500 mt-2">Log in to your DevSync account.</p>
+                    <p className="text-slate-500 mt-2">Log in to your Karyam account.</p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-5">

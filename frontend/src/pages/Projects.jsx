@@ -19,6 +19,9 @@ const Projects = () => {
     filter === 'all' ? true : p.status === filter
   );
 
+  // console.log(projects);
+  
+
   useEffect(() => {
     getAllProjects();
   }, []);

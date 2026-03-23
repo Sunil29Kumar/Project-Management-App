@@ -35,7 +35,7 @@ const Pricing = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-slate-900 mb-4">Plans that scale with you</h2>
           <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-            Whether you're a solo dev or a fast-growing team, DevSync has a plan to help you stay in sync.
+            Whether you're a solo dev or a fast-growing team, Karyam has a plan to help you stay in sync.
           </p>
         </div>
 

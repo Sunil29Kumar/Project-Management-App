@@ -545,7 +545,7 @@ export const addCommentToTask = async (req, res) => {
 }
 
 
-
+// Get all comments for a task
 export const getCommentsForTask = async (req, res) => {
     try {
         const { taskId } = req.params;
@@ -581,3 +581,36 @@ export const getCommentsForTask = async (req, res) => {
 
 
 //  ===============================================
+
+
+
+// ========================  Issues controller ========================
+
+// create issue for a task
+export const createIssue = async (req, res) => {}
+
+// get all issues for a task
+export const getIssuesForTask = async (req, res) => {}
+
+// get issue by id
+export const getIssueById = async (req, res) => {}
+
+
+// ===============================================
+
+
+
+
+// =========================  Issues controller ========================
+
+// create bug for a task
+export const createBug = async (req, res) => {}
+
+// get all bugs for a task
+export const getBugsForTask = async (req, res) => {}
+
+// get bug by id
+export const getBugById = async (req, res) => {}
+
+
+// =============================================

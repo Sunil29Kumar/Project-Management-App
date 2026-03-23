@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="bg-slate-50 pt-16 pb-8 border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-12 mb-12">
         <div className="col-span-2 md:col-span-1">
-          <div className="text-2xl font-bold text-blue-600 mb-4">DevSync</div>
+          <div className="text-2xl font-bold text-blue-600 mb-4">Karyam</div>
           <p className="text-slate-500 text-sm">Building the future of developer collaboration, one project at a time.</p>
         </div>
         <div>
